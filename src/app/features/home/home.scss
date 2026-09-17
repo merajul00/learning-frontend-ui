@@ -1,0 +1,12 @@
+.home {
+  padding: var(--spacing-xl) var(--spacing-lg);
+  text-align: center;
+
+  h1 {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  p {
+    color: var(--color-text-muted);
+  }
+}
