@@ -1,0 +1,32 @@
+.levels {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 26px;
+    color: var(--color-heading);
+  }
+
+  &__subtitle {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  &__status {
+    color: var(--color-text-muted);
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--spacing-md);
+  }
+}

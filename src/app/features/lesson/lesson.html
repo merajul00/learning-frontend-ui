@@ -1,0 +1,53 @@
+@if (loading()) {
+  <p class="lesson__status">Loading lesson&hellip;</p>
+} @else if (!level() || items().length === 0) {
+  <div class="lesson__empty">
+    <p>This level doesn't have lesson content yet.</p>
+    <a routerLink="/levels">Back to Levels</a>
+  </div>
+} @else {
+  <section class="lesson">
+    <header class="lesson__header">
+      <div>
+        <p class="lesson__eyebrow">Level {{ level()!.number }} &mdash; {{ level()!.titleBn }}</p>
+        <h1 class="lesson__title">{{ level()!.titleEn }}</h1>
+      </div>
+      <span class="lesson__count">{{ progressLabel() }}</span>
+    </header>
+
+    <app-progress-bar [value]="progressPercent()" />
+
+    @if (currentGroupTitle(); as groupTitle) {
+      <p class="lesson__group">{{ groupTitle }}</p>
+    }
+
+    @if (currentItem(); as item) {
+      <app-japanese-character-card [item]="item" />
+    }
+
+    <div class="lesson__nav">
+      <button type="button" (click)="previous()" [disabled]="currentIndex() === 0">
+        Previous
+      </button>
+      <button type="button" (click)="next()" [disabled]="isLastItem()">Next</button>
+    </div>
+
+    <div class="lesson__actions">
+      <a [routerLink]="['/levels', levelId, 'practice']" class="lesson__action">Practice</a>
+      @if (lessonCompleted()) {
+        <a [routerLink]="['/levels', levelId, 'quiz']" class="lesson__action">Short Quiz</a>
+        <a [routerLink]="['/levels', levelId, 'exam']" class="lesson__action">Final Exam</a>
+      }
+    </div>
+
+    @if (isLastItem() && !lessonCompleted()) {
+      <p class="lesson__complete">Keep going &mdash; you're on the last character of this level.</p>
+    } @else if (lessonCompleted()) {
+      <p class="lesson__complete">
+        Lesson complete! Take the Short Quiz, then the Final Exam to unlock the next level.
+      </p>
+    }
+
+    <a routerLink="/levels" class="lesson__back">&larr; Back to Levels</a>
+  </section>
+}

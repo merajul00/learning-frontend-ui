@@ -1,0 +1,43 @@
+.daily-mission {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: #fff;
+
+  &--done {
+    border-color: var(--color-success);
+    background-color: var(--color-success-bg);
+  }
+}
+
+.daily-mission__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.daily-mission__title {
+  font-weight: 700;
+  color: var(--color-heading);
+}
+
+.daily-mission__badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-success);
+}
+
+.daily-mission__goal {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.daily-mission__progress {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}

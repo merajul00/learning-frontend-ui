@@ -1,0 +1,77 @@
+@if (loading()) {
+  <p class="exam-result__status">Loading result&hellip;</p>
+} @else if (!summary() || !level()) {
+  <div class="exam-result__empty">
+    <p>We couldn't find this exam result.</p>
+    <a routerLink="/levels">Back to Levels</a>
+  </div>
+} @else {
+  <div class="exam-result">
+    <header class="exam-result__header">
+      <p class="exam-result__eyebrow">Level {{ level()!.number }} &mdash; {{ level()!.titleEn }} Final Exam</p>
+      @if (summary()!.passed) {
+        <h1 class="exam-result__title exam-result__title--pass">✓ Level Complete</h1>
+      } @else {
+        <h1 class="exam-result__title exam-result__title--fail">Not Passed Yet</h1>
+      }
+    </header>
+
+    <div class="exam-result__stats">
+      <div class="exam-result__stat">
+        <span class="exam-result__stat-value">{{ summary()!.correctCount }} / {{ summary()!.totalQuestions }}</span>
+        <span class="exam-result__stat-label">Score</span>
+      </div>
+      <div class="exam-result__stat">
+        <span class="exam-result__stat-value">{{ summary()!.accuracy }}%</span>
+        <span class="exam-result__stat-label">Accuracy</span>
+      </div>
+      <div class="exam-result__stat">
+        <span class="exam-result__stat-value">{{ summary()!.correctCount }}</span>
+        <span class="exam-result__stat-label">Correct</span>
+      </div>
+      <div class="exam-result__stat">
+        <span class="exam-result__stat-value">{{ summary()!.wrongCount }}</span>
+        <span class="exam-result__stat-label">Wrong</span>
+      </div>
+      <div class="exam-result__stat">
+        <span class="exam-result__stat-value">+{{ summary()!.xpAwarded }} XP</span>
+        <span class="exam-result__stat-label">Earned</span>
+      </div>
+    </div>
+
+    <div class="exam-result__actions">
+      @if (summary()!.passed && nextLevel()) {
+        <a [routerLink]="['/levels', nextLevel()!.id]" class="exam-result__cta exam-result__cta--primary">
+          Continue to Next Level
+        </a>
+      } @else if (summary()!.passed) {
+        <a routerLink="/levels" class="exam-result__cta exam-result__cta--primary">
+          Back to Levels
+        </a>
+      }
+      <a [routerLink]="['/levels', levelId, 'exam']" class="exam-result__cta">Retry Exam</a>
+      <a routerLink="/mistakes" class="exam-result__cta">Review All Mistakes</a>
+    </div>
+
+    @if (wrongAnswers().length > 0) {
+      <section class="exam-result__review">
+        <h2 class="exam-result__review-title">Review Mistakes</h2>
+        @for (answer of wrongAnswers(); track answer.id) {
+          <article class="exam-result__mistake">
+            <div class="exam-result__mistake-item">
+              <span class="exam-result__mistake-japanese">{{ answer.japanese }}</span>
+              <app-audio-button [text]="answer.japanese" label="Play correct pronunciation" />
+            </div>
+            <p class="exam-result__mistake-line">
+              Your answer: <strong>{{ answer.selectedOption || '(no answer)' }}</strong>
+            </p>
+            <p class="exam-result__mistake-line">
+              Correct answer: <strong>{{ answer.correctOption }}</strong>
+            </p>
+            <p class="exam-result__mistake-explanation">{{ answer.explanation }}</p>
+          </article>
+        }
+      </section>
+    }
+  </div>
+}

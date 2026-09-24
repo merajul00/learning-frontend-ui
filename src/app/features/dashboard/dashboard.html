@@ -1,0 +1,87 @@
+<section class="dashboard">
+  <header class="dashboard__header">
+    <div>
+      <p class="dashboard__eyebrow">Welcome back</p>
+      <h1 class="dashboard__title">{{ displayName }}</h1>
+    </div>
+
+    <a routerLink="/levels" class="dashboard__cta">Continue Learning</a>
+  </header>
+
+  @if (loading()) {
+    <p class="dashboard__status">Loading your progress&hellip;</p>
+  } @else {
+    <div class="dashboard__stats">
+      <div class="dashboard__stat">
+        <span class="dashboard__stat-label">Total XP</span>
+        <span class="dashboard__stat-value">{{ profile()?.totalXp ?? 0 }}</span>
+      </div>
+
+      <div class="dashboard__stat">
+        <span class="dashboard__stat-label">Learning Streak</span>
+        <span class="dashboard__stat-value">{{ profile()?.streakCount ?? 0 }} days</span>
+      </div>
+
+      <div class="dashboard__stat">
+        <span class="dashboard__stat-label">Latest Exam Score</span>
+        <span class="dashboard__stat-value">
+          @if (latestExam(); as exam) {
+            {{ exam.score }} / {{ exam.totalQuestions }}
+          } @else {
+            &mdash;
+          }
+        </span>
+      </div>
+
+      <div class="dashboard__stat">
+        <span class="dashboard__stat-label">Latest Exam Accuracy</span>
+        <span class="dashboard__stat-value">
+          @if (latestExam(); as exam) {
+            {{ exam.accuracy }}%
+          } @else {
+            &mdash;
+          }
+        </span>
+      </div>
+    </div>
+
+    <app-daily-mission [todayXp]="todayXp()" [targetXp]="dailyGoalXp()" />
+
+    @if (currentLevel(); as current) {
+      <div class="dashboard__current">
+        <h2 class="dashboard__section-title">Pick up where you left off</h2>
+        <app-level-card
+          [level]="current.level"
+          [state]="current.state"
+          [itemsCompleted]="current.itemsCompleted"
+          [totalItems]="current.totalItems"
+        />
+        <a [routerLink]="['/levels', current.level.id]" class="dashboard__recommend">
+          @if (!current.progress?.lessonCompleted) {
+            Recommended: continue the lesson &rarr;
+          } @else {
+            Recommended: take the Final Exam &rarr;
+          }
+        </a>
+      </div>
+    } @else {
+      <p class="dashboard__note">You've completed every available level. Nicely done!</p>
+    }
+
+    @if (topMistakes().length > 0) {
+      <div class="dashboard__mistakes">
+        <h2 class="dashboard__section-title">Mistake Review</h2>
+        <div class="dashboard__mistake-list">
+          @for (mistake of topMistakes(); track mistake.id) {
+            <span class="dashboard__mistake-chip">
+              {{ mistake.japanese }} ({{ mistake.mistakeCount }})
+            </span>
+          }
+        </div>
+        <a routerLink="/mistakes" class="dashboard__all-mistakes">Review all mistakes &rarr;</a>
+      </div>
+    }
+
+    <a routerLink="/levels" class="dashboard__all-levels">View all levels &rarr;</a>
+  }
+</section>

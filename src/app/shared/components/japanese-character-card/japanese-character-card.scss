@@ -1,0 +1,88 @@
+.character-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xl);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: #fff;
+  text-align: center;
+
+  &__main {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+  }
+
+  &__glyph {
+    font-size: 96px;
+    line-height: 1;
+    color: var(--color-heading);
+  }
+
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__romaji {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-accent);
+    text-transform: lowercase;
+  }
+
+  &__bangla {
+    font-size: 16px;
+    color: var(--color-text-muted);
+  }
+
+  &__example {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+    width: 100%;
+    padding-top: var(--spacing-md);
+    border-top: 1px dashed var(--color-border);
+  }
+
+  &__example-label {
+    margin: 0;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+  }
+
+  &__example-row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+
+  &__example-japanese {
+    font-size: 28px;
+    color: var(--color-heading);
+  }
+
+  &__example-meta {
+    display: flex;
+    gap: var(--spacing-sm);
+    font-size: 14px;
+    color: var(--color-text-muted);
+  }
+
+  &__note {
+    margin: 0;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-warning-bg);
+    color: var(--color-warning);
+    font-family: var(--font-family-bengali);
+    font-size: 13px;
+    text-align: left;
+  }
+}

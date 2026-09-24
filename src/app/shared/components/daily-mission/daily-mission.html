@@ -1,0 +1,11 @@
+<div class="daily-mission" [class.daily-mission--done]="achieved()">
+  <div class="daily-mission__header">
+    <span class="daily-mission__title">Daily Mission</span>
+    @if (achieved()) {
+      <span class="daily-mission__badge">✓ Complete</span>
+    }
+  </div>
+  <p class="daily-mission__goal">Earn {{ targetXp() }} XP today</p>
+  <app-progress-bar [value]="percent()" />
+  <p class="daily-mission__progress">{{ todayXp() }} / {{ targetXp() }} XP</p>
+</div>

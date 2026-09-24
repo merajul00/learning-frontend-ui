@@ -2,6 +2,7 @@
 @use 'styles/reset';
 
 body {
+  overflow-x: hidden;
   font-family: var(--font-family-base);
   color: var(--color-text);
   background-color: var(--color-background);

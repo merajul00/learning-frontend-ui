@@ -1,0 +1,11 @@
+@if (isSupported) {
+  <button
+    type="button"
+    class="audio-button"
+    [class.audio-button--playing]="playing()"
+    (click)="play()"
+    [attr.aria-label]="label()"
+  >
+    <span aria-hidden="true">🔊</span>
+  </button>
+}

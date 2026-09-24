@@ -1,0 +1,28 @@
+<article class="level-card" [class.level-card--locked]="isLocked()">
+  <header class="level-card__header">
+    <span class="level-card__number">{{ level().number }}</span>
+    <span class="level-card__status" [class]="'level-card__status--' + state()">
+      @if (isLocked()) {
+        <span aria-hidden="true">🔒</span>
+      }
+      {{ statusLabel() }}
+    </span>
+  </header>
+
+  <h3 class="level-card__title">{{ level().titleEn }}</h3>
+  <p class="level-card__title-bn">{{ level().titleBn }}</p>
+  <p class="level-card__description">{{ level().description }}</p>
+
+  @if (!isLocked() && totalItems() > 0) {
+    <app-progress-bar [value]="progressPercent()" />
+    <p class="level-card__count">{{ itemsCompleted() }} / {{ totalItems() }} completed</p>
+  }
+
+  @if (!isLocked()) {
+    <a [routerLink]="['/levels', level().id]" class="level-card__cta">
+      {{ state() === 'completed' ? 'Review' : 'Continue' }}
+    </a>
+  } @else {
+    <span class="level-card__cta level-card__cta--disabled">Locked</span>
+  }
+</article>

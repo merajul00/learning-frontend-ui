@@ -1,0 +1,79 @@
+.stroke-viewer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding-top: var(--spacing-md);
+  border-top: 1px dashed var(--color-border);
+
+  &__label {
+    margin: 0;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-text-muted);
+  }
+
+  &__canvas {
+    width: 96px;
+    height: 96px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+  }
+
+  &__path {
+    fill: none;
+    stroke: var(--color-heading);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &__controls {
+    display: flex;
+    gap: 4px;
+  }
+
+  &__number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--color-surface);
+    color: var(--color-text-muted);
+    font-size: 11px;
+    font-weight: 700;
+
+    &--done {
+      background-color: var(--color-accent);
+      color: #fff;
+    }
+  }
+
+  &__play {
+    padding: 4px var(--spacing-md);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: none;
+    color: var(--color-accent);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:disabled {
+      color: var(--color-text-muted);
+      cursor: default;
+    }
+  }
+
+  &__placeholder {
+    margin: 0;
+    font-size: 13px;
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+}

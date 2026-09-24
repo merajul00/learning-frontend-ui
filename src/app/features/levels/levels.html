@@ -1,0 +1,21 @@
+<section class="levels">
+  <header class="levels__header">
+    <h1 class="levels__title">Learning Levels</h1>
+    <p class="levels__subtitle">Complete each level in order to unlock the next one.</p>
+  </header>
+
+  @if (loading()) {
+    <p class="levels__status">Loading levels&hellip;</p>
+  } @else {
+    <div class="levels__grid">
+      @for (item of levels(); track item.level.id) {
+        <app-level-card
+          [level]="item.level"
+          [state]="item.state"
+          [itemsCompleted]="item.itemsCompleted"
+          [totalItems]="item.totalItems"
+        />
+      }
+    </div>
+  }
+</section>

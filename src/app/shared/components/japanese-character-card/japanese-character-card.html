@@ -1,0 +1,62 @@
+<article class="character-card">
+  <div class="character-card__main">
+    <span class="character-card__glyph">{{ item().japanese }}</span>
+    <app-audio-button [text]="item().japanese" label="Play character pronunciation" />
+  </div>
+
+  <div class="character-card__meta">
+    @if (item().romaji) {
+      <span class="character-card__romaji">{{ item().romaji }}</span>
+    }
+    @if (item().banglaPronunciation) {
+      <span class="character-card__bangla">{{ item().banglaPronunciation }}</span>
+    }
+  </div>
+
+  @if (item().exampleWordJapanese) {
+    <div class="character-card__example">
+      <p class="character-card__example-label">Example word</p>
+      <div class="character-card__example-row">
+        <span class="character-card__example-japanese">{{ item().exampleWordJapanese }}</span>
+        <app-audio-button [text]="item().exampleWordJapanese!" label="Play example word pronunciation" />
+      </div>
+      <div class="character-card__example-meta">
+        @if (item().exampleWordRomaji) {
+          <span>{{ item().exampleWordRomaji }}</span>
+        }
+        @if (item().exampleWordBangla) {
+          <span>{{ item().exampleWordBangla }}</span>
+        }
+      </div>
+    </div>
+  }
+
+  @if (item().exampleSentenceJapanese) {
+    <div class="character-card__example">
+      <p class="character-card__example-label">Example sentence</p>
+      <div class="character-card__example-row">
+        <span class="character-card__example-japanese">{{ item().exampleSentenceJapanese }}</span>
+        <app-audio-button
+          [text]="item().exampleSentenceJapanese!"
+          label="Play example sentence pronunciation"
+        />
+      </div>
+      <div class="character-card__example-meta">
+        @if (item().exampleSentenceRomaji) {
+          <span>{{ item().exampleSentenceRomaji }}</span>
+        }
+        @if (item().exampleSentenceBangla) {
+          <span>{{ item().exampleSentenceBangla }}</span>
+        }
+      </div>
+    </div>
+  }
+
+  @if (showStrokeOrder) {
+    <app-stroke-order-viewer [character]="item().japanese" [data]="item().strokeOrderData" />
+  }
+
+  @if (item().banglaMeaning) {
+    <p class="character-card__note">{{ item().banglaMeaning }}</p>
+  }
+</article>
