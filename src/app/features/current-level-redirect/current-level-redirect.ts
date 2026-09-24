@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LevelsService } from '../../core/services/levels.service';
 import { ProgressService } from '../../core/services/progress.service';
@@ -10,7 +10,7 @@ import { findCurrentLevel } from '../../shared/utils/current-level';
   imports: [RouterLink],
   selector: 'app-current-level-redirect',
   template: `
-    @if (noCurrentLevel) {
+    @if (noCurrentLevel()) {
       <div class="redirect-empty">
         <p>You don't have an in-progress level right now.</p>
         <a routerLink="/levels">Browse Levels</a>
@@ -19,7 +19,7 @@ import { findCurrentLevel } from '../../shared/utils/current-level';
   `,
 })
 export class CurrentLevelRedirect implements OnInit {
-  noCurrentLevel = false;
+  noCurrentLevel = signal(false);
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -41,7 +41,7 @@ export class CurrentLevelRedirect implements OnInit {
     const current = findCurrentLevel(levels, progressByLevel, itemCounts);
 
     if (!current) {
-      this.noCurrentLevel = true;
+      this.noCurrentLevel.set(true);
       return;
     }
 

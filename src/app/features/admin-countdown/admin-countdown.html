@@ -1,0 +1,42 @@
+@if (loading()) {
+  <p class="admin-countdown__status">Loading…</p>
+} @else {
+  <div class="admin-countdown">
+    <h1 class="admin-countdown__title">Coming Soon countdown</h1>
+    <p class="admin-countdown__subtitle">
+      Controls the countdown shown on every "Coming Soon" page. Admin only.
+    </p>
+
+    @if (targetAt()) {
+      <p class="admin-countdown__current">
+        Current target: <strong>{{ targetAt() | date: 'medium' }}</strong>
+      </p>
+    }
+
+    <div class="admin-countdown__quick-actions">
+      <button type="button" (click)="adjust(-86400000)" [disabled]="saving()">-1 day</button>
+      <button type="button" (click)="adjust(-3600000)" [disabled]="saving()">-1 hour</button>
+      <button type="button" (click)="adjust(3600000)" [disabled]="saving()">+1 hour</button>
+      <button type="button" (click)="adjust(86400000)" [disabled]="saving()">+1 day</button>
+    </div>
+
+    <form class="admin-countdown__form" (submit)="$event.preventDefault(); saveFromInput()">
+      <label for="target-at">Set exact date &amp; time</label>
+      <input
+        id="target-at"
+        type="datetime-local"
+        [ngModel]="targetInput()"
+        (ngModelChange)="targetInput.set($event)"
+        name="targetAt"
+      />
+      <button type="submit" [disabled]="saving()">Save</button>
+    </form>
+
+    @if (saved()) {
+      <p class="admin-countdown__saved">Countdown updated.</p>
+    }
+    @if (error()) {
+      <p class="admin-countdown__error">{{ error() }}</p>
+    }
+  </div>
+}

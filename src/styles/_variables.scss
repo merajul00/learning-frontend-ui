@@ -5,8 +5,8 @@
   --color-primary-dark: #303f9f;
   --color-text: #1a1a1a;
   --color-text-muted: #5f6368;
-  --color-background: #ffffff;
-  --color-surface: #f5f5f7;
+  --color-background: #fdeded;
+  --color-surface: #fdeded;
   --color-border: #e0e0e0;
   --color-accent: #d11c20;
   --color-accent-dark: #a91619;
@@ -20,9 +20,29 @@
   --color-blossom: #f6c9d3;
   --color-blossom-bg: #fdf1f4;
 
+  // Top bar (Figma "Travel To Japan" design system tokens)
+  --color-text-primary: #0c110f;
+  --color-text-secondary: #919992;
+  --color-icon-secondary: #707371;
+  --color-border-light: #e6e8e5;
+  --color-caret: #637381;
+  --color-online: #28a745;
+
+  // Sidebar (Figma "Travel To Japan" design system tokens)
+  --color-grey-900: #212b36;
+  --color-grey-600: #637381;
+  --color-sidebar-border: #e6eaed;
+  --color-sidebar-divider: rgba(145, 158, 171, 0.24);
+  --color-menu-hover: #fbe0e0;
+
   --font-family-brand: 'Righteous', var(--font-family-base);
   --font-family-bengali: 'Noto Sans Bengali', var(--font-family-base);
   --font-family-cta: 'Instrument Sans', var(--font-family-base);
+  --font-family-serif: 'Inria Serif', serif;
+  --font-family-tight: 'Inter Tight', var(--font-family-base);
+  --font-family-roboto: 'Roboto', var(--font-family-base);
+  --font-family-inclusive: 'Inclusive Sans', var(--font-family-base);
+  --font-family-mono: 'Consolas', 'SFMono-Regular', Menlo, monospace;
 
   --font-family-base:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,

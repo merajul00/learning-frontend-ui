@@ -1,8 +1,8 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { Profile } from '../../core/models/user-progress.model';
 import { AuthService } from '../../core/services/auth.service';
 import { ProfileService } from '../../core/services/profile.service';
+import { getInitials } from '../../shared/utils/initials';
 
 @Component({
   imports: [RouterLink, RouterLinkActive, RouterOutlet],
@@ -11,38 +11,73 @@ import { ProfileService } from '../../core/services/profile.service';
   templateUrl: './auth-shell.html',
 })
 export class AuthShell implements OnInit {
-  readonly navLinks = [
-    { path: '/dashboard', label: 'Home' },
-    { path: '/levels', label: 'Levels' },
-    { path: '/practice', label: 'Practice' },
-    { path: '/quiz', label: 'Quiz' },
-    { path: '/progress', label: 'Progress' },
-    { path: '/mistakes', label: 'Mistakes' },
-    { path: '/profile', label: 'Profile' },
+  readonly jlptLevels = [
+    { label: 'N5 Levels', path: '/levels' },
+    { label: 'N4 Levels', path: '/levels/n4' },
+    { label: 'N3 Levels', path: '/levels/n3' },
+    { label: 'N2 Levels', path: '/levels/n2' },
+    { label: 'N1 Levels', path: '/levels/n1' },
   ];
 
-  profile = signal<Profile | null>(null);
+  readonly collapsed = signal(false);
+  readonly levelsOpen = signal(true);
+  readonly recentOpen = signal(true);
+  readonly profileMenuOpen = signal(false);
+  readonly themeMode = signal<'light' | 'dark'>('light');
+
+  readonly profile;
 
   get displayName(): string {
     return this.profile()?.displayName || this.authService.user()?.email || 'Learner';
   }
 
   get initials(): string {
-    const name = this.displayName.trim();
-    if (!name) return '?';
-    const parts = name.split(/\s+/).filter(Boolean);
-    const initials = parts.length > 1 ? `${parts[0][0]}${parts[1][0]}` : name.slice(0, 2);
-    return initials.toUpperCase();
+    return getInitials(this.displayName);
+  }
+
+  get email(): string {
+    return this.authService.user()?.email ?? '';
   }
 
   constructor(
     private readonly authService: AuthService,
     private readonly profileService: ProfileService,
     private readonly router: Router,
-  ) {}
+  ) {
+    this.profile = this.profileService.myProfile;
+  }
 
   async ngOnInit(): Promise<void> {
-    this.profile.set(await this.profileService.getMyProfile());
+    await this.profileService.getMyProfile();
+    try {
+      await this.profileService.syncAvatarFromGoogle();
+    } catch {
+      // Non-critical: the sidebar/profile just keeps showing initials instead.
+    }
+  }
+
+  toggleCollapsed(): void {
+    this.collapsed.update((value) => !value);
+  }
+
+  toggleLevels(): void {
+    this.levelsOpen.update((value) => !value);
+  }
+
+  toggleRecent(): void {
+    this.recentOpen.update((value) => !value);
+  }
+
+  toggleProfileMenu(): void {
+    this.profileMenuOpen.update((value) => !value);
+  }
+
+  closeProfileMenu(): void {
+    this.profileMenuOpen.set(false);
+  }
+
+  setThemeMode(mode: 'light' | 'dark'): void {
+    this.themeMode.set(mode);
   }
 
   async signOut(): Promise<void> {

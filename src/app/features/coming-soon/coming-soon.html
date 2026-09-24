@@ -1,4 +1,52 @@
 <section class="coming-soon">
-  <h1 class="coming-soon__title">{{ data().title }}</h1>
-  <p class="coming-soon__description">{{ data().description }}</p>
+  <div class="coming-soon__header">
+    <h1 class="coming-soon__title">{{ data().title }}</h1>
+    <p class="coming-soon__subtitle">{{ data().description }}</p>
+  </div>
+
+  <div class="coming-soon__illustration">
+    <img src="images/coming-soon/illustration.png" alt="" />
+  </div>
+
+  <div class="coming-soon__countdown">
+    <div class="coming-soon__countdown-unit">
+      <span class="coming-soon__countdown-value">{{ countdown().days }}</span>
+      <span class="coming-soon__countdown-label">Days</span>
+    </div>
+    <span class="coming-soon__countdown-sep">:</span>
+    <div class="coming-soon__countdown-unit">
+      <span class="coming-soon__countdown-value">{{ countdown().hours }}</span>
+      <span class="coming-soon__countdown-label">Hours</span>
+    </div>
+    <span class="coming-soon__countdown-sep">:</span>
+    <div class="coming-soon__countdown-unit">
+      <span class="coming-soon__countdown-value">{{ countdown().minutes }}</span>
+      <span class="coming-soon__countdown-label">Minutes</span>
+    </div>
+    <span class="coming-soon__countdown-sep">:</span>
+    <div class="coming-soon__countdown-unit">
+      <span class="coming-soon__countdown-value">{{ countdown().seconds }}</span>
+      <span class="coming-soon__countdown-label">Seconds</span>
+    </div>
+  </div>
+
+  <form class="coming-soon__notify" (submit)="$event.preventDefault()">
+    <input type="email" class="coming-soon__notify-input" placeholder="Enter your email" />
+    <button type="submit" class="coming-soon__notify-btn">Notify Me</button>
+  </form>
+
+  <div class="coming-soon__social">
+    <a class="coming-soon__social-btn" href="#" aria-label="Facebook" (click)="$event.preventDefault()">
+      <img src="images/coming-soon/social-facebook.svg" alt="" />
+    </a>
+    <a class="coming-soon__social-btn" href="#" aria-label="Instagram" (click)="$event.preventDefault()">
+      <img src="images/coming-soon/social-instagram.svg" alt="" />
+    </a>
+    <a class="coming-soon__social-btn" href="#" aria-label="LinkedIn" (click)="$event.preventDefault()">
+      <img src="images/coming-soon/social-linkedin.svg" alt="" />
+    </a>
+    <a class="coming-soon__social-btn" href="#" aria-label="Twitter" (click)="$event.preventDefault()">
+      <img src="images/coming-soon/social-twitter.svg" alt="" />
+    </a>
+  </div>
 </section>

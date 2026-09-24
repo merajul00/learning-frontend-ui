@@ -5,6 +5,43 @@
     <h1 class="profile__title">Profile</h1>
 
     <section class="profile__card">
+      <h2 class="profile__section-title">Profile Photo</h2>
+      <div class="profile__avatar-row">
+        @if (profile()?.avatarUrl; as avatarUrl) {
+          <img [src]="avatarUrl" alt="Your profile photo" class="profile__avatar-img" />
+        } @else {
+          <span class="profile__avatar-fallback">{{ initials }}</span>
+        }
+
+        <div class="profile__avatar-actions">
+          <label class="profile__avatar-upload" [class.profile__avatar-upload--disabled]="uploadingAvatar()">
+            {{ uploadingAvatar() ? 'Uploading...' : (profile()?.avatarUrl ? 'Change Photo' : 'Set Photo') }}
+            <input
+              type="file"
+              accept="image/png, image/jpeg, image/webp, image/gif"
+              [disabled]="uploadingAvatar()"
+              (change)="onAvatarSelected($event)"
+              hidden
+            />
+          </label>
+          @if (profile()?.avatarUrl) {
+            <button
+              type="button"
+              class="profile__avatar-remove"
+              [disabled]="uploadingAvatar()"
+              (click)="removeAvatar()"
+            >
+              Remove
+            </button>
+          }
+        </div>
+      </div>
+      @if (avatarError(); as err) {
+        <span class="profile__error">{{ err }}</span>
+      }
+    </section>
+
+    <section class="profile__card">
       <h2 class="profile__section-title">Learning Info</h2>
       <dl class="profile__facts">
         <div>
