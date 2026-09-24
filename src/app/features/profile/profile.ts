@@ -1,12 +1,13 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { Profile, UserProgress } from '../../core/models/user-progress.model';
+import { UserProgress } from '../../core/models/user-progress.model';
 import { AuthService } from '../../core/services/auth.service';
 import { LevelsService } from '../../core/services/levels.service';
 import { ProfileService } from '../../core/services/profile.service';
 import { ProgressService } from '../../core/services/progress.service';
 import { CurrentLevelView, findCurrentLevel } from '../../shared/utils/current-level';
+import { getInitials } from '../../shared/utils/initials';
 
 @Component({
   imports: [FormsModule, RouterLink],
@@ -16,7 +17,6 @@ import { CurrentLevelView, findCurrentLevel } from '../../shared/utils/current-l
 })
 export class ProfilePage implements OnInit {
   loading = signal(true);
-  profile = signal<Profile | null>(null);
   currentLevel = signal<CurrentLevelView | null>(null);
   lessonsCompleted = signal(0);
 
@@ -29,12 +29,23 @@ export class ProfilePage implements OnInit {
   passwordSaved = signal(false);
   passwordError = signal<string | null>(null);
 
+  uploadingAvatar = signal(false);
+  avatarError = signal<string | null>(null);
+
+  readonly profile;
+
+  get initials(): string {
+    return getInitials(this.profile()?.displayName || this.authService.user()?.email || '');
+  }
+
   constructor(
     readonly authService: AuthService,
     private readonly profileService: ProfileService,
     private readonly levelsService: LevelsService,
     private readonly progressService: ProgressService,
-  ) {}
+  ) {
+    this.profile = this.profileService.myProfile;
+  }
 
   async ngOnInit(): Promise<void> {
     try {
@@ -45,7 +56,6 @@ export class ProfilePage implements OnInit {
         this.levelsService.getItemCountsByLevel(),
       ]);
 
-      this.profile.set(profile);
       this.displayNameInput.set(profile?.displayName ?? '');
       this.lessonsCompleted.set(progress.filter((p) => p.lessonCompleted).length);
 
@@ -64,10 +74,38 @@ export class ProfilePage implements OnInit {
     this.nameSaved.set(false);
     try {
       await this.profileService.updateDisplayName(name);
-      this.profile.update((p) => (p ? { ...p, displayName: name } : p));
       this.nameSaved.set(true);
     } finally {
       this.savingName.set(false);
+    }
+  }
+
+  async onAvatarSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    this.uploadingAvatar.set(true);
+    this.avatarError.set(null);
+    try {
+      await this.profileService.uploadAvatar(file);
+    } catch (error) {
+      this.avatarError.set(error instanceof Error ? error.message : 'Could not upload photo.');
+    } finally {
+      this.uploadingAvatar.set(false);
+      input.value = '';
+    }
+  }
+
+  async removeAvatar(): Promise<void> {
+    this.uploadingAvatar.set(true);
+    this.avatarError.set(null);
+    try {
+      await this.profileService.removeAvatar();
+    } catch (error) {
+      this.avatarError.set(error instanceof Error ? error.message : 'Could not remove photo.');
+    } finally {
+      this.uploadingAvatar.set(false);
     }
   }
 

@@ -1,34 +1,261 @@
 <div class="auth-shell">
-  <aside class="auth-shell__sidebar">
-    <a routerLink="/dashboard" class="auth-shell__brand">NihongoBD</a>
+  <aside class="auth-shell__sidebar" [class.auth-shell__sidebar--collapsed]="collapsed()">
+    <div class="auth-shell__sidebar-title">
+      <a routerLink="/dashboard" class="auth-shell__sidebar-logo">
+        <img src="images/sidebar/logo-mark.svg" alt="" class="auth-shell__sidebar-logomark" />
+        <span class="auth-shell__sidebar-logotext">Nihongo<span class="auth-shell__sidebar-logotext-accent">BD</span></span>
+      </a>
+      <button
+        type="button"
+        class="auth-shell__sidebar-toggle"
+        [class.auth-shell__sidebar-toggle--collapsed]="collapsed()"
+        (click)="toggleCollapsed()"
+        [attr.aria-label]="collapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+      >
+        <img src="images/sidebar/sidebar-toggle.svg" alt="" />
+      </button>
+    </div>
 
-    <nav class="auth-shell__nav">
-      @for (link of navLinks; track link.path) {
-        <a
-          [routerLink]="link.path"
-          routerLinkActive="auth-shell__nav-link--active"
-          class="auth-shell__nav-link"
+    <nav class="auth-shell__sidebar-body">
+      <a
+        routerLink="/dashboard"
+        routerLinkActive="auth-shell__menu-item--active"
+        class="auth-shell__menu-item auth-shell__menu-item--primary"
+      >
+        <span class="auth-shell__menu-icon"><img src="images/sidebar/dashboard-icon.svg" alt="" /></span>
+        <span class="auth-shell__menu-label">Dashboard</span>
+      </a>
+
+      <div class="auth-shell__menu-group">
+        <button
+          type="button"
+          class="auth-shell__menu-item auth-shell__menu-item--toggle"
+          (click)="toggleLevels()"
+          [attr.aria-expanded]="levelsOpen()"
         >
-          {{ link.label }}
-        </a>
-      }
+          <span class="auth-shell__menu-icon"><img src="images/sidebar/levels-icon.svg" alt="" /></span>
+          <span class="auth-shell__menu-label">Learning Levels</span>
+          <span class="auth-shell__menu-chevron" [class.auth-shell__menu-chevron--open]="levelsOpen()">
+            <img src="images/sidebar/chevron-icon.svg" alt="" />
+          </span>
+        </button>
+
+        @if (levelsOpen()) {
+          <div class="auth-shell__submenu">
+            @for (jlpt of jlptLevels; track jlpt.path) {
+              <a
+                [routerLink]="jlpt.path"
+                routerLinkActive="auth-shell__subitem--active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="auth-shell__subitem"
+              >
+                <span class="auth-shell__subitem-line">
+                  <span class="auth-shell__subitem-dot"></span>
+                </span>
+                <span class="auth-shell__subitem-content">
+                  <img src="images/sidebar/sublevel-icon.svg" alt="" />
+                  <span>{{ jlpt.label }}</span>
+                </span>
+              </a>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="auth-shell__menu-group">
+        <button
+          type="button"
+          class="auth-shell__menu-item auth-shell__menu-item--toggle"
+          (click)="toggleRecent()"
+          [attr.aria-expanded]="recentOpen()"
+        >
+          <span class="auth-shell__menu-icon"><img src="images/sidebar/recent-activity-icon.svg" alt="" /></span>
+          <span class="auth-shell__menu-label">Recent Activity</span>
+          <span class="auth-shell__menu-chevron" [class.auth-shell__menu-chevron--open]="recentOpen()">
+            <img src="images/sidebar/chevron-icon.svg" alt="" />
+          </span>
+        </button>
+
+        @if (recentOpen()) {
+          <div class="auth-shell__submenu">
+            <a routerLink="/quiz" routerLinkActive="auth-shell__subitem--active" class="auth-shell__subitem">
+              <span class="auth-shell__subitem-line">
+                <span class="auth-shell__subitem-dot"></span>
+              </span>
+              <span class="auth-shell__subitem-content">
+                <img src="images/sidebar/quiz-icon.svg" alt="" />
+                <span>Quiz</span>
+              </span>
+            </a>
+            <a routerLink="/practice" routerLinkActive="auth-shell__subitem--active" class="auth-shell__subitem">
+              <span class="auth-shell__subitem-line">
+                <span class="auth-shell__subitem-dot"></span>
+              </span>
+              <span class="auth-shell__subitem-content">
+                <img src="images/sidebar/practices-icon.svg" alt="" />
+                <span>Practices</span>
+              </span>
+            </a>
+          </div>
+        }
+      </div>
+
+      <a routerLink="/homework-verify" routerLinkActive="auth-shell__menu-item--active" class="auth-shell__menu-item">
+        <span class="auth-shell__menu-icon"><img src="images/sidebar/homework-verify-icon.svg" alt="" /></span>
+        <span class="auth-shell__menu-label">Homework Verify</span>
+      </a>
+
+      <a routerLink="/progress" routerLinkActive="auth-shell__menu-item--active" class="auth-shell__menu-item">
+        <span class="auth-shell__menu-icon"><img src="images/sidebar/learning-progress-icon.svg" alt="" /></span>
+        <span class="auth-shell__menu-label">Learning Progress</span>
+      </a>
+
+      <a routerLink="/mistakes" routerLinkActive="auth-shell__menu-item--active" class="auth-shell__menu-item">
+        <span class="auth-shell__menu-icon"><img src="images/sidebar/mistakes-icon.svg" alt="" /></span>
+        <span class="auth-shell__menu-label">Mistakes</span>
+      </a>
+
+      <a routerLink="/help-support" routerLinkActive="auth-shell__menu-item--active" class="auth-shell__menu-item">
+        <span class="auth-shell__menu-icon"><img src="images/sidebar/help-support-icon.svg" alt="" /></span>
+        <span class="auth-shell__menu-label">Help &amp; Supports</span>
+      </a>
+
+      <a routerLink="/settings" routerLinkActive="auth-shell__menu-item--active" class="auth-shell__menu-item">
+        <span class="auth-shell__menu-icon"><img src="images/sidebar/setting-icon.svg" alt="" /></span>
+        <span class="auth-shell__menu-label">Setting</span>
+      </a>
     </nav>
 
-    <button type="button" class="auth-shell__signout" (click)="signOut()">Sign Out</button>
+    <div class="auth-shell__sidebar-divider"></div>
+
+    <div class="auth-shell__sidebar-footer">
+      <span class="auth-shell__sidebar-copyright">&copy; 2026 NihongoBD</span>
+    </div>
   </aside>
 
   <main class="auth-shell__content">
     <header class="auth-shell__topbar">
-      <button type="button" class="auth-shell__notification" aria-label="Notifications">
-        <img src="images/header/notification-icon.svg" alt="" class="auth-shell__notification-icon" />
-      </button>
+      <div class="auth-shell__greeting">
+        <span class="auth-shell__greeting-icon">
+          <img src="images/topbar/sun-icon.svg" alt="" />
+        </span>
+        <p class="auth-shell__greeting-text">Hello, {{ displayName }}!</p>
+      </div>
 
-      <a routerLink="/profile" class="auth-shell__profile" aria-label="Go to your profile">
-        <span class="auth-shell__avatar">{{ initials }}</span>
-        <span class="auth-shell__profile-name">{{ displayName }}</span>
-      </a>
+      <div class="auth-shell__topbar-controls">
+        <div class="auth-shell__search">
+          <span class="auth-shell__search-icon">
+            <img src="images/topbar/search-icon.svg" alt="" />
+          </span>
+          <input type="search" class="auth-shell__search-input" placeholder="Search anything" />
+          <span class="auth-shell__search-kbd">
+            <span class="auth-shell__kbd-key">⌘</span>
+            <span class="auth-shell__kbd-key">F</span>
+          </span>
+        </div>
+
+        <div class="auth-shell__actions">
+          <button type="button" class="auth-shell__notification" aria-label="Notifications">
+            <img src="images/topbar/notification-bell.svg" alt="" />
+          </button>
+
+          <div class="auth-shell__profile-wrap">
+            <button
+              type="button"
+              class="auth-shell__profile"
+              (click)="toggleProfileMenu()"
+              [attr.aria-expanded]="profileMenuOpen()"
+              aria-haspopup="true"
+              aria-label="Open profile menu"
+            >
+              <span class="auth-shell__avatar-wrap">
+                @if (profile()?.avatarUrl; as avatarUrl) {
+                  <img [src]="avatarUrl" alt="" class="auth-shell__avatar-img" />
+                } @else {
+                  <span class="auth-shell__avatar">{{ initials }}</span>
+                }
+                <span class="auth-shell__avatar-badge"></span>
+              </span>
+              <span class="auth-shell__caret" [class.auth-shell__caret--open]="profileMenuOpen()">
+                <img src="images/topbar/caret-down.svg" alt="" />
+              </span>
+            </button>
+
+            @if (profileMenuOpen()) {
+              <div class="auth-shell__profile-backdrop" (click)="closeProfileMenu()"></div>
+
+              <div class="auth-shell__profile-menu" role="menu">
+                <div class="auth-shell__profile-menu-header">
+                  <span class="auth-shell__avatar-wrap">
+                    @if (profile()?.avatarUrl; as avatarUrl) {
+                      <img [src]="avatarUrl" alt="" class="auth-shell__avatar-img" />
+                    } @else {
+                      <span class="auth-shell__avatar">{{ initials }}</span>
+                    }
+                    <span class="auth-shell__avatar-badge"></span>
+                  </span>
+                  <span class="auth-shell__profile-menu-info">
+                    <span class="auth-shell__profile-menu-name">{{ displayName }}</span>
+                    <span class="auth-shell__profile-menu-email">{{ email }}</span>
+                  </span>
+                </div>
+
+                <div class="auth-shell__profile-menu-divider"></div>
+
+                <a
+                  routerLink="/profile"
+                  class="auth-shell__profile-menu-item"
+                  role="menuitem"
+                  (click)="closeProfileMenu()"
+                >
+                  <img src="images/topbar/profile-icon.svg" alt="" class="auth-shell__profile-menu-icon" />
+                  <span>Profile settings</span>
+                </a>
+
+                <div class="auth-shell__profile-menu-divider"></div>
+
+                <div class="auth-shell__profile-menu-theme">
+                  <span class="auth-shell__profile-menu-theme-label">Theme</span>
+                  <div class="auth-shell__theme-switch">
+                    <button
+                      type="button"
+                      class="auth-shell__theme-btn"
+                      [class.auth-shell__theme-btn--active]="themeMode() === 'light'"
+                      (click)="setThemeMode('light')"
+                    >
+                      Light
+                    </button>
+                    <button
+                      type="button"
+                      class="auth-shell__theme-btn"
+                      [class.auth-shell__theme-btn--active]="themeMode() === 'dark'"
+                      (click)="setThemeMode('dark')"
+                    >
+                      Dark
+                    </button>
+                  </div>
+                </div>
+
+                <div class="auth-shell__profile-menu-divider"></div>
+
+                <button
+                  type="button"
+                  class="auth-shell__profile-menu-item auth-shell__profile-menu-item--danger"
+                  role="menuitem"
+                  (click)="signOut()"
+                >
+                  <img src="images/topbar/logout-icon.svg" alt="" class="auth-shell__profile-menu-icon auth-shell__profile-menu-icon--logout" />
+                  <span>Sign out</span>
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
     </header>
 
-    <router-outlet />
+    <div class="auth-shell__page">
+      <router-outlet />
+    </div>
   </main>
 </div>

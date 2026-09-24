@@ -1,0 +1,6 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Notification">
+<path id="Bell" d="M10 2.5C7.51472 2.5 5.5 4.51472 5.5 7V9.83262C5.5 10.4172 5.28684 10.9819 4.90104 11.4211L4.09217 12.3418C3.06897 13.5079 3.65582 15.3487 5.15762 15.7095C8.3459 16.4767 11.6541 16.4767 14.8424 15.7095C16.3442 15.3487 16.931 13.5079 15.9078 12.3418L15.099 11.4211C14.7132 10.9819 14.5 10.4172 14.5 9.83262V7C14.5 4.51472 12.4853 2.5 10 2.5Z" stroke="#707371" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Clapper" d="M11.7288 17.5C11.3702 18.0741 10.7333 18.4546 10 18.4546C9.26669 18.4546 8.62981 18.0741 8.27118 17.5" stroke="#707371" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg>

@@ -56,6 +56,21 @@ export class Login {
     }
   }
 
+  async continueWithGoogle(): Promise<void> {
+    this.errorMessage.set('');
+    this.infoMessage.set('');
+    this.submitting.set(true);
+    localStorage.setItem(REMEMBER_ME_KEY, String(this.rememberMe));
+
+    try {
+      // On success the browser navigates away to Google, so submitting stays true.
+      await this.authService.signInWithGoogle();
+    } catch (error) {
+      this.errorMessage.set(error instanceof Error ? error.message : 'Google sign-in failed.');
+      this.submitting.set(false);
+    }
+  }
+
   async forgotPassword(): Promise<void> {
     if (!this.email) {
       this.errorMessage.set('Enter your email above first, then click "Forgot password".');

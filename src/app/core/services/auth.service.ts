@@ -43,6 +43,15 @@ export class AuthService {
     if (error) throw error;
   }
 
+  /** Redirects the browser to Google; Supabase picks up the session from the URL on return. */
+  async signInWithGoogle() {
+    const { error } = await this.supabase.client.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/dashboard` },
+    });
+    if (error) throw error;
+  }
+
   async signOut() {
     await this.supabase.client.auth.signOut();
   }
