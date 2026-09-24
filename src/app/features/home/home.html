@@ -1,4 +1,116 @@
 <section class="home">
-  <h1>Welcome</h1>
-  <p>Your Angular application foundation is ready for development.</p>
+  <div class="home__hero">
+    <p class="home__eyebrow">বাংলা ভাষায় জাপানি শিখুন</p>
+    <h1 class="home__title">Learn Japanese in Bangla</h1>
+    <p class="home__subtitle">Beginner to Advanced</p>
+    <p class="home__lede">
+      Study Japanese step-by-step with clear Bangla explanations &mdash; every character, word,
+      and sentence comes with রোমাজি (Romaji) and Bangla pronunciation so you always know exactly
+      what you're learning.
+    </p>
+
+    <div class="home__actions">
+      <button type="button" class="home__cta home__cta--primary" (click)="getStarted()">
+        Start Learning Free
+      </button>
+      <button type="button" class="home__cta home__cta--secondary" (click)="scrollToOverview()">
+        Watch Intro Video
+      </button>
+    </div>
+
+    <div class="home__benefits">
+      <div class="home__benefit">
+        <span class="home__benefit-icon">1</span>
+        <span>Step-by-step learning</span>
+      </div>
+      <div class="home__benefit">
+        <span class="home__benefit-icon">বা</span>
+        <span>Bangla explanation</span>
+      </div>
+      <div class="home__benefit">
+        <span class="home__benefit-icon">練</span>
+        <span>Interactive practice</span>
+      </div>
+      <div class="home__benefit">
+        <span class="home__benefit-icon">%</span>
+        <span>Progress tracking</span>
+      </div>
+    </div>
+  </div>
+
+  @if (isAuthenticated() && !loading() && profile(); as profile) {
+    <div class="home__stats">
+      <h2 class="home__stats-title">Your Learning Snapshot</h2>
+      <div class="home__stats-grid">
+        <div class="home__stat">
+          <span class="home__stat-value">{{ profile.totalXp }}</span>
+          <span class="home__stat-label">Total XP</span>
+        </div>
+        <div class="home__stat">
+          <span class="home__stat-value">{{ profile.streakCount }}</span>
+          <span class="home__stat-label">Day Streak</span>
+        </div>
+        <div class="home__stat">
+          <span class="home__stat-value">{{ overallProgress() }}%</span>
+          <span class="home__stat-label">Overall Progress</span>
+        </div>
+        <div class="home__stat">
+          <span class="home__stat-value">{{ completedLevelsCount() }}</span>
+          <span class="home__stat-label">Levels Completed</span>
+        </div>
+      </div>
+    </div>
+  }
+
+  <section id="home-how-it-works" class="home__journey">
+    <app-section-heading
+      eyebrow="Your Learning Journey"
+      title="১৭টি ধাপে জাপানি ভাষা"
+    />
+
+    @if (loading()) {
+      <p class="home__status">Loading levels&hellip;</p>
+    } @else {
+      <div class="home__level-grid">
+        @for (entry of levels(); track entry.level.id) {
+          <app-level-card
+            [level]="entry.level"
+            [state]="entry.state"
+            [itemsCompleted]="entry.itemsCompleted"
+            [totalItems]="entry.totalItems"
+          />
+        }
+      </div>
+    }
+  </section>
+
+  <section class="home__why">
+    <app-section-heading eyebrow="Why NihongoBD" title="কেন NihongoBD বেছে নেবেন" />
+
+    <div class="home__why-grid">
+      <div class="home__why-card">
+        <h3>Bangla Explanations</h3>
+        <p>Every lesson is explained in Bangla, so nothing gets lost in translation.</p>
+      </div>
+      <div class="home__why-card">
+        <h3>Interactive Practice</h3>
+        <p>Practice and short quizzes reinforce every lesson before you move on.</p>
+      </div>
+      <div class="home__why-card">
+        <h3>Progress Tracking</h3>
+        <p>XP, streaks, and mistake tracking keep you motivated and focused on weak spots.</p>
+      </div>
+      <div class="home__why-card">
+        <h3>Structured Learning</h3>
+        <p>A beginner-to-advanced path across 17 levels, from Hiragana to Katakana.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="home__final-cta">
+    <h2>Ready to start your Japanese journey?</h2>
+    <button type="button" class="home__cta home__cta--primary" (click)="getStarted()">
+      Start Learning Free
+    </button>
+  </section>
 </section>

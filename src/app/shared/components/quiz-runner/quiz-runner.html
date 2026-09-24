@@ -1,0 +1,104 @@
+@if (questions().length === 0) {
+  <p class="quiz-runner__empty">Not enough content to build a {{ kindLabel() | lowercase }} yet.</p>
+} @else if (finished()) {
+  <div class="quiz-runner__result">
+    <h2 class="quiz-runner__result-title">{{ kindLabel() }} Complete</h2>
+
+    @if (result(); as res) {
+      <div class="quiz-runner__stats">
+        <div class="quiz-runner__stat">
+          <span class="quiz-runner__stat-value">{{ res.correctCount }} / {{ res.totalQuestions }}</span>
+          <span class="quiz-runner__stat-label">Correct</span>
+        </div>
+        <div class="quiz-runner__stat">
+          <span class="quiz-runner__stat-value">{{ res.accuracy }}%</span>
+          <span class="quiz-runner__stat-label">Accuracy</span>
+        </div>
+        <div class="quiz-runner__stat">
+          <span class="quiz-runner__stat-value">+{{ res.xpAwarded }} XP</span>
+          <span class="quiz-runner__stat-label">Earned</span>
+        </div>
+      </div>
+    }
+
+    <button type="button" class="quiz-runner__retry" (click)="retry()">Try Again</button>
+  </div>
+} @else {
+  <section class="quiz-runner">
+    <header class="quiz-runner__header">
+      <span class="quiz-runner__kind">{{ kindLabel() }} &mdash; {{ level().titleEn }}</span>
+      <span class="quiz-runner__count">Question {{ currentIndex() + 1 }} of {{ questions().length }}</span>
+    </header>
+
+    <app-progress-bar [value]="progressPercent()" />
+
+    @if (currentQuestion(); as question) {
+      <div class="quiz-runner__question">
+        <div class="quiz-runner__prompt-row">
+          <p class="quiz-runner__prompt" [class.quiz-runner__prompt--japanese]="question.promptField === 'japanese'">
+            {{ question.prompt }}
+          </p>
+          @if (question.promptField === 'japanese') {
+            <app-audio-button [text]="question.prompt" label="Play question pronunciation" />
+          }
+        </div>
+
+        <div class="quiz-runner__options">
+          @for (option of question.options; track option) {
+            <button
+              type="button"
+              class="quiz-runner__option"
+              [class.quiz-runner__option--selected]="selected() === option"
+              [class.quiz-runner__option--correct]="submitted() && option === question.correctAnswer"
+              [class.quiz-runner__option--incorrect]="
+                submitted() && selected() === option && option !== question.correctAnswer
+              "
+              [disabled]="submitted()"
+              (click)="selectOption(option)"
+            >
+              {{ option }}
+              @if (submitted() && option === question.correctAnswer) {
+                <span aria-hidden="true"> ✓</span>
+              } @else if (submitted() && selected() === option) {
+                <span aria-hidden="true"> ✗</span>
+              }
+            </button>
+          }
+        </div>
+
+        @if (!submitted()) {
+          <button type="button" class="quiz-runner__submit" [disabled]="!selected()" (click)="submitAnswer()">
+            Submit Answer
+          </button>
+        } @else {
+          <div
+            class="quiz-runner__feedback"
+            [class.quiz-runner__feedback--correct]="isCorrect()"
+            [class.quiz-runner__feedback--incorrect]="!isCorrect()"
+          >
+            @if (isCorrect()) {
+              <p class="quiz-runner__feedback-title">Correct!</p>
+              <p>{{ question.explanation }}</p>
+            } @else {
+              <p class="quiz-runner__feedback-title">Incorrect</p>
+              <p>Your answer: <strong>{{ selected() }}</strong></p>
+              <p>Correct answer: <strong>{{ question.correctAnswer }}</strong></p>
+              <p>{{ question.explanation }}</p>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @if (errorMessage(); as msg) {
+      <p class="quiz-runner__error">{{ msg }}</p>
+    }
+
+    <div class="quiz-runner__nav">
+      <button type="button" (click)="previous()" [disabled]="currentIndex() === 0">Previous</button>
+      <button type="button" (click)="next()" [disabled]="!submitted() || submitting()">
+        {{ isLastQuestion() ? (submitting() ? 'Submitting...' : 'Finish') : 'Next Question' }}
+      </button>
+    </div>
+  </section>
+}

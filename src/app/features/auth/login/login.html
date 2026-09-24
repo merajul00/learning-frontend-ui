@@ -1,0 +1,81 @@
+<section class="login">
+  <div class="login__card">
+    <a routerLink="/" class="login__brand">NihongoBD</a>
+
+    <div class="login__tabs">
+      <button
+        type="button"
+        class="login__tab"
+        [class.login__tab--active]="mode() === 'login'"
+        (click)="setMode('login')"
+      >
+        Log In
+      </button>
+      <button
+        type="button"
+        class="login__tab"
+        [class.login__tab--active]="mode() === 'register'"
+        (click)="setMode('register')"
+      >
+        Create Account
+      </button>
+    </div>
+
+    <form class="login__form" (ngSubmit)="submit()" #form="ngForm">
+      @if (mode() === 'register') {
+        <label class="login__field">
+          <span>Name</span>
+          <input name="displayName" type="text" [(ngModel)]="displayName" autocomplete="name" />
+        </label>
+      }
+
+      <label class="login__field">
+        <span>Email address</span>
+        <input
+          name="email"
+          type="email"
+          required
+          [(ngModel)]="email"
+          autocomplete="email"
+        />
+      </label>
+
+      <label class="login__field">
+        <span>Password</span>
+        <input
+          name="password"
+          type="password"
+          required
+          minlength="6"
+          [(ngModel)]="password"
+          autocomplete="current-password"
+        />
+      </label>
+
+      @if (mode() === 'login') {
+        <div class="login__row">
+          <label class="login__checkbox">
+            <input name="rememberMe" type="checkbox" [(ngModel)]="rememberMe" />
+            <span>Remember me</span>
+          </label>
+
+          <button type="button" class="login__link" (click)="forgotPassword()">
+            Forgot password?
+          </button>
+        </div>
+      }
+
+      @if (errorMessage()) {
+        <p class="login__error" role="alert">{{ errorMessage() }}</p>
+      }
+
+      @if (infoMessage()) {
+        <p class="login__info" role="status">{{ infoMessage() }}</p>
+      }
+
+      <button type="submit" class="login__submit" [disabled]="submitting() || form.invalid">
+        {{ mode() === 'login' ? 'Log In' : 'Create Account' }}
+      </button>
+    </form>
+  </div>
+</section>

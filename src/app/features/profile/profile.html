@@ -1,0 +1,94 @@
+@if (loading()) {
+  <p class="profile__status">Loading profile&hellip;</p>
+} @else {
+  <div class="profile">
+    <h1 class="profile__title">Profile</h1>
+
+    <section class="profile__card">
+      <h2 class="profile__section-title">Learning Info</h2>
+      <dl class="profile__facts">
+        <div>
+          <dt>Email</dt>
+          <dd>{{ authService.user()?.email }}</dd>
+        </div>
+        <div>
+          <dt>Current Level</dt>
+          <dd>
+            @if (currentLevel(); as current) {
+              Level {{ current.level.number }} &mdash; {{ current.level.titleEn }}
+            } @else {
+              All available levels completed
+            }
+          </dd>
+        </div>
+        <div>
+          <dt>Progress</dt>
+          <dd>
+            @if (currentLevel(); as current) {
+              {{ current.itemsCompleted }} / {{ current.totalItems }} items
+            } @else {
+              &mdash;
+            }
+          </dd>
+        </div>
+        <div>
+          <dt>Total XP</dt>
+          <dd>{{ profile()?.totalXp ?? 0 }}</dd>
+        </div>
+        <div>
+          <dt>Streak</dt>
+          <dd>{{ profile()?.streakCount ?? 0 }} days</dd>
+        </div>
+        <div>
+          <dt>Lessons Completed</dt>
+          <dd>{{ lessonsCompleted() }}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="profile__card">
+      <h2 class="profile__section-title">Display Name</h2>
+      <form class="profile__form" (ngSubmit)="saveDisplayName()">
+        <label for="displayName">Display name</label>
+        <input
+          id="displayName"
+          type="text"
+          name="displayName"
+          [(ngModel)]="displayNameInput"
+          maxlength="60"
+        />
+        <button type="submit" [disabled]="savingName()">
+          {{ savingName() ? 'Saving...' : 'Save' }}
+        </button>
+        @if (nameSaved()) {
+          <span class="profile__saved">Saved</span>
+        }
+      </form>
+    </section>
+
+    <section class="profile__card">
+      <h2 class="profile__section-title">Change Password</h2>
+      <form class="profile__form" (ngSubmit)="savePassword()">
+        <label for="newPassword">New password</label>
+        <input
+          id="newPassword"
+          type="password"
+          name="newPassword"
+          [(ngModel)]="newPassword"
+          autocomplete="new-password"
+        />
+        <button type="submit" [disabled]="savingPassword()">
+          {{ savingPassword() ? 'Saving...' : 'Update Password' }}
+        </button>
+        @if (passwordSaved()) {
+          <span class="profile__saved">Password updated</span>
+        }
+        @if (passwordError(); as err) {
+          <span class="profile__error">{{ err }}</span>
+        }
+      </form>
+    </section>
+
+    <a routerLink="/levels" class="profile__back">&larr; Back to Levels</a>
+  </div>
+}

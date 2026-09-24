@@ -1,0 +1,82 @@
+@if (loading()) {
+  <p class="progress-page__status">Loading your progress&hellip;</p>
+} @else {
+  <div class="progress-page">
+    <h1 class="progress-page__title">Progress</h1>
+
+    <section class="progress-page__overview">
+      <div class="progress-page__stat">
+        <span class="progress-page__stat-value">{{ totalXp() }}</span>
+        <span class="progress-page__stat-label">Total XP</span>
+      </div>
+      <div class="progress-page__stat">
+        <span class="progress-page__stat-value">{{ streak() }} 🔥</span>
+        <span class="progress-page__stat-label">Learning Streak</span>
+      </div>
+      <div class="progress-page__stat">
+        <span class="progress-page__stat-value">{{ lessonsCompleted() }}</span>
+        <span class="progress-page__stat-label">Lessons Completed</span>
+      </div>
+      <div class="progress-page__stat">
+        <span class="progress-page__stat-value">{{ overallPercent() }}%</span>
+        <span class="progress-page__stat-label">Overall Progress</span>
+      </div>
+    </section>
+
+    <app-daily-mission [todayXp]="todayXp()" [targetXp]="dailyGoalXp()" />
+
+    @if (currentLevel(); as current) {
+      <section class="progress-page__recommendation">
+        <h2 class="progress-page__section-title">Recommended Next Action</h2>
+        <p>
+          @if (!current.progress?.lessonCompleted) {
+            Continue Level {{ current.level.number }} &mdash; {{ current.level.titleEn }}
+          } @else {
+            Take the Level {{ current.level.number }} Final Exam
+          }
+        </p>
+        <a [routerLink]="['/levels', current.level.id]">Go &rarr;</a>
+      </section>
+    }
+
+    @if (levelProgressRows().length > 0) {
+      <section>
+        <h2 class="progress-page__section-title">Progress by Level</h2>
+        <div class="progress-page__level-rows">
+          @for (row of levelProgressRows(); track row.level.id) {
+            <div class="progress-page__level-row">
+              <span class="progress-page__level-name">{{ row.level.titleEn }}</span>
+              <app-progress-bar [value]="row.totalItems ? (row.itemsCompleted / row.totalItems) * 100 : 0" />
+              <span class="progress-page__level-count">{{ row.itemsCompleted }} / {{ row.totalItems }}</span>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    <section>
+      <h2 class="progress-page__section-title">Weekly Activity</h2>
+      <div class="progress-page__week">
+        @for (day of weekCells(); track day.date) {
+          <div class="progress-page__day" [class.progress-page__day--active]="day.active">
+            <span>{{ day.label }}</span>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section>
+      <h2 class="progress-page__section-title">Completed Levels Roadmap</h2>
+      <div class="progress-page__roadmap">
+        @for (item of board(); track item.level.id) {
+          <app-level-card
+            [level]="item.level"
+            [state]="item.state"
+            [itemsCompleted]="item.itemsCompleted"
+            [totalItems]="item.totalItems"
+          />
+        }
+      </div>
+    </section>
+  </div>
+}

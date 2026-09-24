@@ -1,0 +1,41 @@
+<div class="stroke-viewer">
+  <p class="stroke-viewer__label">Stroke order</p>
+
+  @if (available()) {
+    <svg
+      class="stroke-viewer__canvas"
+      [attr.viewBox]="viewBox()"
+      role="img"
+      [attr.aria-label]="'Stroke order diagram for ' + character()"
+    >
+      @for (stroke of strokes(); track $index) {
+        @if ($index < visibleCount() || !playing()) {
+          <path class="stroke-viewer__path" [attr.d]="stroke" />
+        }
+      }
+    </svg>
+
+    <div class="stroke-viewer__controls">
+      @for (stroke of strokes(); track $index) {
+        <span
+          class="stroke-viewer__number"
+          [class.stroke-viewer__number--done]="$index < visibleCount()"
+        >
+          {{ $index + 1 }}
+        </span>
+      }
+    </div>
+
+    <button
+      type="button"
+      class="stroke-viewer__play"
+      (click)="play()"
+      [disabled]="playing()"
+      aria-label="Play stroke order animation"
+    >
+      {{ playing() ? 'Playing…' : 'Play' }}
+    </button>
+  } @else {
+    <p class="stroke-viewer__placeholder">Stroke order isn't available for this item yet.</p>
+  }
+</div>

@@ -8,6 +8,21 @@
   --color-background: #ffffff;
   --color-surface: #f5f5f7;
   --color-border: #e0e0e0;
+  --color-accent: #d11c20;
+  --color-accent-dark: #a91619;
+  --color-heading: #121212;
+  --color-success: #1a7a3c;
+  --color-success-bg: #e6f4ea;
+  --color-warning: #b45309;
+  --color-warning-bg: #fef3e2;
+  --color-error-bg: #fbe9e9;
+  --color-soft-blue: #eaf2fb;
+  --color-blossom: #f6c9d3;
+  --color-blossom-bg: #fdf1f4;
+
+  --font-family-brand: 'Righteous', var(--font-family-base);
+  --font-family-bengali: 'Noto Sans Bengali', var(--font-family-base);
+  --font-family-cta: 'Instrument Sans', var(--font-family-base);
 
   --font-family-base:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
@@ -18,6 +33,7 @@
   --spacing-md: 1rem;
   --spacing-lg: 1.5rem;
   --spacing-xl: 2.5rem;
+  --spacing-page-x: 80px;
 
   --radius-sm: 4px;
   --radius-md: 8px;

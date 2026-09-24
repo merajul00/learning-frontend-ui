@@ -1,0 +1,122 @@
+.mistakes__status,
+.mistakes__empty {
+  color: var(--color-text-muted);
+}
+
+.mistakes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  max-width: 640px;
+}
+
+.mistakes__title {
+  margin: 0;
+  color: var(--color-heading);
+}
+
+.mistakes__summary {
+  display: flex;
+  gap: var(--spacing-xl);
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: #fff;
+}
+
+.mistakes__summary-stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.mistakes__summary-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-heading);
+}
+
+.mistakes__summary-label {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.mistakes__section-title {
+  margin: 0 0 var(--spacing-sm);
+  font-size: 16px;
+  color: var(--color-heading);
+}
+
+.mistakes__category-bn {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.mistakes__confused-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.mistakes__confused-item {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: #fff;
+}
+
+.mistakes__confused-pair {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.mistakes__confused-count {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.mistakes__card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-sm);
+  background-color: #fff;
+}
+
+.mistakes__card-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.mistakes__card-japanese {
+  font-size: 28px;
+  color: var(--color-heading);
+}
+
+.mistakes__card-line {
+  margin: 2px 0;
+  font-size: 14px;
+
+  &--muted {
+    color: var(--color-text-muted);
+    font-size: 12px;
+  }
+}
+
+.mistakes__practice-again {
+  align-self: flex-start;
+  margin-top: var(--spacing-xs);
+  padding: 6px var(--spacing-md);
+  border-radius: 999px;
+  background-color: var(--color-accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}

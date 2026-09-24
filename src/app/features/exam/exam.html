@@ -1,0 +1,109 @@
+@if (loading()) {
+  <p class="exam__status">Loading exam&hellip;</p>
+} @else if (!level() || items().length === 0) {
+  <div class="exam__empty">
+    <p>This level doesn't have exam content yet.</p>
+    <a routerLink="/levels">Back to Levels</a>
+  </div>
+} @else if (!progress()?.lessonCompleted) {
+  <div class="exam__gate">
+    <p>Finish the lesson content before taking the Final Exam.</p>
+    <a [routerLink]="['/levels', levelId]">Continue the lesson</a>
+  </div>
+} @else {
+  <div class="exam">
+    <header class="exam__header">
+      <div>
+        <p class="exam__eyebrow">Level {{ level()!.number }} &mdash; {{ level()!.titleEn }}</p>
+        <h1 class="exam__title">Final Exam</h1>
+      </div>
+      <span class="exam__count">Question {{ currentIndex() + 1 }} / {{ questions().length }}</span>
+    </header>
+
+    <nav class="exam__navigator" aria-label="Question navigator">
+      @for (question of questions(); track question.learningItemId + $index; let i = $index) {
+        <button
+          type="button"
+          class="exam__nav-item"
+          [class.exam__nav-item--current]="navState(i) === 'current'"
+          [class.exam__nav-item--answered]="navState(i) === 'answered'"
+          [class.exam__nav-item--marked]="navState(i) === 'marked'"
+          [attr.aria-current]="navState(i) === 'current' ? 'true' : null"
+          [attr.aria-label]="'Question ' + (i + 1) + ' (' + navState(i).replace('_', ' ') + ')'"
+          (click)="goTo(i)"
+        >
+          {{ i + 1 }}
+        </button>
+      }
+    </nav>
+    <p class="exam__legend">
+      <span class="exam__legend-item exam__legend-item--answered">Answered</span>
+      <span class="exam__legend-item exam__legend-item--marked">Marked for Review</span>
+      <span class="exam__legend-item exam__legend-item--not-answered">Not Answered</span>
+    </p>
+
+    @if (currentQuestion(); as question) {
+      <div class="exam__question">
+        <div class="exam__prompt-row">
+          <p class="exam__prompt" [class.exam__prompt--japanese]="question.promptField === 'japanese'">
+            {{ question.prompt }}
+          </p>
+          @if (question.promptField === 'japanese') {
+            <app-audio-button [text]="question.prompt" label="Play question pronunciation" />
+          }
+        </div>
+
+        <div class="exam__options">
+          @for (option of question.options; track option) {
+            <button
+              type="button"
+              class="exam__option"
+              [class.exam__option--selected]="currentAnswer()?.selectedValue === option"
+              (click)="selectOption(option)"
+            >
+              {{ option }}
+            </button>
+          }
+        </div>
+
+        <button
+          type="button"
+          class="exam__mark"
+          [class.exam__mark--active]="currentAnswer()?.marked"
+          (click)="toggleMark()"
+        >
+          {{ currentAnswer()?.marked ? '★ Marked for Review' : '☆ Mark for Review' }}
+        </button>
+      </div>
+    }
+
+    @if (errorMessage(); as msg) {
+      <p class="exam__error">{{ msg }}</p>
+    }
+
+    @if (confirmingSubmit()) {
+      <div class="exam__confirm" role="alertdialog" aria-label="Confirm exam submission">
+        <p>
+          You have {{ unansweredCount() }} unanswered question{{ unansweredCount() === 1 ? '' : 's' }}.
+          Submit anyway?
+        </p>
+        <div class="exam__confirm-actions">
+          <button type="button" (click)="cancelConfirm()">Keep Working</button>
+          <button type="button" class="exam__confirm-submit" (click)="confirmFinish()">
+            Submit Exam
+          </button>
+        </div>
+      </div>
+    }
+
+    <div class="exam__nav">
+      <button type="button" (click)="previous()" [disabled]="currentIndex() === 0">Previous</button>
+      @if (!isLastQuestion()) {
+        <button type="button" (click)="next()">Next</button>
+      }
+      <button type="button" class="exam__finish" [disabled]="submitting()" (click)="requestFinish()">
+        {{ submitting() ? 'Submitting...' : 'Finish Exam' }}
+      </button>
+    </div>
+  </div>
+}

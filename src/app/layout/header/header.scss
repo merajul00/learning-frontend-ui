@@ -1,28 +1,100 @@
 .header {
+  position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-md) var(--spacing-lg);
-  border-bottom: 1px solid var(--color-border);
+  padding: 40px var(--spacing-page-x) 0;
 
-  &__brand {
-    font-weight: 600;
-    font-size: 1.125rem;
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
     text-decoration: none;
   }
 
-  &__nav {
+  &__logo-badge {
     display: flex;
-    gap: var(--spacing-md);
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background-color: var(--color-accent);
+  }
 
-    a {
-      text-decoration: none;
-      color: var(--color-text-muted);
+  &__logo-mark {
+    display: block;
+    width: 38px;
+    height: 38px;
+  }
 
-      &.is-active {
-        color: var(--color-primary);
-        font-weight: 600;
-      }
+  &__logo-text {
+    font-family: var(--font-family-brand);
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 89px;
+    height: 46px;
+    padding: 4px 4px 4px 17px;
+    border-radius: 999px;
+    background-color: #fff;
+  }
+
+  &__notification {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+
+    &-icon {
+      display: block;
+      width: 14px;
+      height: 15px;
+    }
+  }
+
+  &__menu {
+    position: relative;
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--color-accent);
+    cursor: pointer;
+  }
+
+  &__menu-bar {
+    position: absolute;
+    left: 12px;
+    width: 15px;
+    height: 1.667px;
+    background-color: #fff;
+
+    &:nth-child(1) {
+      top: 14px;
+    }
+
+    &:nth-child(2) {
+      top: 22.33px;
+    }
+
+    &--short {
+      left: 15.33px;
+      width: 11.667px;
     }
   }
 }

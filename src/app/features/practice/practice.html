@@ -1,0 +1,34 @@
+@if (loading()) {
+  <p class="practice__status">Loading practice&hellip;</p>
+} @else if (!level() || items().length === 0) {
+  <div class="practice__empty">
+    <p>This level doesn't have practice content yet.</p>
+    <a routerLink="/levels">Back to Levels</a>
+  </div>
+} @else {
+  <div class="practice">
+    <app-quiz-runner
+      [level]="level()!"
+      [items]="items()"
+      kind="practice"
+      [restrictToItemIds]="restrictIds"
+      (completed)="onCompleted()"
+    />
+
+    @if (justFinished()) {
+      <div class="practice__next">
+        @if (progress()?.lessonCompleted) {
+          <a [routerLink]="['/levels', levelId, 'quiz']" class="practice__next-link">
+            Ready for the Short Quiz &rarr;
+          </a>
+        } @else {
+          <a [routerLink]="['/levels', levelId]" class="practice__next-link">
+            Back to the lesson &rarr;
+          </a>
+        }
+      </div>
+    }
+
+    <a routerLink="/levels" class="practice__back">&larr; Back to Levels</a>
+  </div>
+}

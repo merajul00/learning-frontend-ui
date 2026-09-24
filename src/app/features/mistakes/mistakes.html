@@ -1,0 +1,72 @@
+@if (loading()) {
+  <p class="mistakes__status">Loading your mistake notebook&hellip;</p>
+} @else if (totalMistakes() === 0) {
+  <div class="mistakes__empty">
+    <p>No mistakes recorded yet. Keep practicing &mdash; anything you get wrong will show up here.</p>
+  </div>
+} @else {
+  <div class="mistakes">
+    <h1 class="mistakes__title">Mistake Notebook</h1>
+
+    <section class="mistakes__summary">
+      <div class="mistakes__summary-stat">
+        <span class="mistakes__summary-value">{{ totalMistakes() }}</span>
+        <span class="mistakes__summary-label">Total Mistakes</span>
+      </div>
+      @if (weakTopics().length > 0) {
+        <div class="mistakes__summary-stat">
+          <span class="mistakes__summary-value">{{ weakTopics()[0].titleEn }}</span>
+          <span class="mistakes__summary-label">Weakest Topic</span>
+        </div>
+      }
+    </section>
+
+    @if (mostConfused().length > 0) {
+      <section>
+        <h2 class="mistakes__section-title">Most Confused Items</h2>
+        <div class="mistakes__confused-list">
+          @for (item of mostConfused(); track item.id) {
+            <div class="mistakes__confused-item">
+              <span class="mistakes__confused-pair">
+                {{ item.japanese }} &rarr; {{ item.lastWrongAnswer || '?' }}
+              </span>
+              <span class="mistakes__confused-count">{{ item.mistakeCount }} mistakes</span>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    @for (category of categories(); track category.levelId) {
+      <section class="mistakes__category">
+        <h2 class="mistakes__section-title">
+          {{ category.titleEn }} <span class="mistakes__category-bn">{{ category.titleBn }}</span>
+        </h2>
+
+        @for (mistake of category.mistakes; track mistake.id) {
+          <article class="mistakes__card">
+            <div class="mistakes__card-item">
+              <span class="mistakes__card-japanese">{{ mistake.japanese }}</span>
+              <app-audio-button [text]="mistake.japanese" label="Play correct pronunciation" />
+            </div>
+            <p class="mistakes__card-line">
+              Your answer: <strong>{{ mistake.lastWrongAnswer }}</strong>
+              &nbsp;&middot;&nbsp;
+              Correct answer: <strong>{{ mistake.lastCorrectAnswer }}</strong>
+            </p>
+            <p class="mistakes__card-line mistakes__card-line--muted">
+              Mistaken {{ mistake.mistakeCount }} time{{ mistake.mistakeCount === 1 ? '' : 's' }}
+            </p>
+            <a
+              [routerLink]="['/levels', mistake.levelId, 'practice']"
+              [queryParams]="{ itemIds: mistake.learningItemId }"
+              class="mistakes__practice-again"
+            >
+              Practice Again
+            </a>
+          </article>
+        }
+      </section>
+    }
+  </div>
+}

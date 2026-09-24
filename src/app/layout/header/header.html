@@ -1,6 +1,19 @@
 <header class="header">
-  <a class="header__brand" routerLink="/">Frontend</a>
-  <nav class="header__nav">
-    <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
-  </nav>
+  <a class="header__logo" routerLink="/" aria-label="NihongoBD home">
+    <span class="header__logo-badge">
+      <img class="header__logo-mark" src="images/header/logo-mark.svg" alt="" />
+    </span>
+    <span class="header__logo-text">NihongoBD</span>
+  </a>
+
+  <div class="header__actions">
+    <button type="button" class="header__notification" aria-label="Notifications">
+      <img class="header__notification-icon" src="images/header/notification-icon.svg" alt="" />
+    </button>
+    <button type="button" class="header__menu" aria-label="Open menu">
+      <span class="header__menu-bar"></span>
+      <span class="header__menu-bar"></span>
+      <span class="header__menu-bar header__menu-bar--short"></span>
+    </button>
+  </div>
 </header>
