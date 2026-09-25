@@ -20,6 +20,7 @@
       <a
         routerLink="/dashboard"
         routerLinkActive="auth-shell__menu-item--active"
+        [routerLinkActiveOptions]="{ exact: true }"
         class="auth-shell__menu-item auth-shell__menu-item--primary"
       >
         <span class="auth-shell__menu-icon"><img src="images/sidebar/dashboard-icon.svg" alt="" /></span>
@@ -78,7 +79,12 @@
 
         @if (recentOpen()) {
           <div class="auth-shell__submenu">
-            <a routerLink="/quiz" routerLinkActive="auth-shell__subitem--active" class="auth-shell__subitem">
+            <a
+              routerLink="/quiz"
+              routerLinkActive="auth-shell__subitem--active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="auth-shell__subitem"
+            >
               <span class="auth-shell__subitem-line">
                 <span class="auth-shell__subitem-dot"></span>
               </span>
@@ -87,7 +93,12 @@
                 <span>Quiz</span>
               </span>
             </a>
-            <a routerLink="/practice" routerLinkActive="auth-shell__subitem--active" class="auth-shell__subitem">
+            <a
+              routerLink="/practice"
+              routerLinkActive="auth-shell__subitem--active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="auth-shell__subitem"
+            >
               <span class="auth-shell__subitem-line">
                 <span class="auth-shell__subitem-dot"></span>
               </span>
@@ -100,27 +111,52 @@
         }
       </div>
 
-      <a routerLink="/homework-verify" routerLinkActive="auth-shell__menu-item--active" class="auth-shell__menu-item">
+      <a
+        routerLink="/homework-verify"
+        routerLinkActive="auth-shell__menu-item--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="auth-shell__menu-item"
+      >
         <span class="auth-shell__menu-icon"><img src="images/sidebar/homework-verify-icon.svg" alt="" /></span>
         <span class="auth-shell__menu-label">Homework Verify</span>
       </a>
 
-      <a routerLink="/progress" routerLinkActive="auth-shell__menu-item--active" class="auth-shell__menu-item">
+      <a
+        routerLink="/progress"
+        routerLinkActive="auth-shell__menu-item--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="auth-shell__menu-item"
+      >
         <span class="auth-shell__menu-icon"><img src="images/sidebar/learning-progress-icon.svg" alt="" /></span>
         <span class="auth-shell__menu-label">Learning Progress</span>
       </a>
 
-      <a routerLink="/mistakes" routerLinkActive="auth-shell__menu-item--active" class="auth-shell__menu-item">
+      <a
+        routerLink="/mistakes"
+        routerLinkActive="auth-shell__menu-item--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="auth-shell__menu-item"
+      >
         <span class="auth-shell__menu-icon"><img src="images/sidebar/mistakes-icon.svg" alt="" /></span>
         <span class="auth-shell__menu-label">Mistakes</span>
       </a>
 
-      <a routerLink="/help-support" routerLinkActive="auth-shell__menu-item--active" class="auth-shell__menu-item">
+      <a
+        routerLink="/help-support"
+        routerLinkActive="auth-shell__menu-item--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="auth-shell__menu-item"
+      >
         <span class="auth-shell__menu-icon"><img src="images/sidebar/help-support-icon.svg" alt="" /></span>
         <span class="auth-shell__menu-label">Help &amp; Supports</span>
       </a>
 
-      <a routerLink="/settings" routerLinkActive="auth-shell__menu-item--active" class="auth-shell__menu-item">
+      <a
+        routerLink="/settings"
+        routerLinkActive="auth-shell__menu-item--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="auth-shell__menu-item"
+      >
         <span class="auth-shell__menu-icon"><img src="images/sidebar/setting-icon.svg" alt="" /></span>
         <span class="auth-shell__menu-label">Setting</span>
       </a>
