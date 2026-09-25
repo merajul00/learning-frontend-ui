@@ -9,6 +9,28 @@ export interface Profile {
   streakCount: number;
   lastActivityDate: string | null;
   role: 'user' | 'admin';
+  firstName: string | null;
+  lastName: string | null;
+  phone: string | null;
+  address: string | null;
+  country: string | null;
+  stateRegion: string | null;
+  city: string | null;
+  zipCode: string | null;
+  bio: string | null;
+  updatedAt: string;
+}
+
+export interface ProfileDetailsUpdate {
+  firstName: string | null;
+  lastName: string | null;
+  phone: string | null;
+  address: string | null;
+  country: string | null;
+  stateRegion: string | null;
+  city: string | null;
+  zipCode: string | null;
+  bio: string | null;
 }
 
 export interface UserProgress {

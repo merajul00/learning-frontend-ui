@@ -20,8 +20,8 @@ export class AuthShell implements OnInit {
   ];
 
   readonly collapsed = signal(false);
-  readonly levelsOpen = signal(true);
-  readonly recentOpen = signal(true);
+  readonly levelsOpen = signal(false);
+  readonly recentOpen = signal(false);
   readonly profileMenuOpen = signal(false);
   readonly themeMode = signal<'light' | 'dark'>('light');
 

@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { Profile } from '../models/user-progress.model';
+import { Profile, ProfileDetailsUpdate } from '../models/user-progress.model';
 import { SupabaseClientService } from './supabase-client';
 
 interface ProfileRow {
@@ -13,6 +13,16 @@ interface ProfileRow {
   streak_count: number;
   last_activity_date: string | null;
   role: 'user' | 'admin';
+  first_name: string | null;
+  last_name: string | null;
+  phone: string | null;
+  address: string | null;
+  country: string | null;
+  state_region: string | null;
+  city: string | null;
+  zip_code: string | null;
+  bio: string | null;
+  updated_at: string;
 }
 
 function toProfile(row: ProfileRow): Profile {
@@ -27,8 +37,21 @@ function toProfile(row: ProfileRow): Profile {
     streakCount: row.streak_count,
     lastActivityDate: row.last_activity_date,
     role: row.role,
+    firstName: row.first_name,
+    lastName: row.last_name,
+    phone: row.phone,
+    address: row.address,
+    country: row.country,
+    stateRegion: row.state_region,
+    city: row.city,
+    zipCode: row.zip_code,
+    bio: row.bio,
+    updatedAt: row.updated_at,
   };
 }
+
+const PROFILE_COLUMNS =
+  'user_id, display_name, avatar_url, current_level_id, current_lesson_id, current_item_index, total_xp, streak_count, last_activity_date, role, first_name, last_name, phone, address, country, state_region, city, zip_code, bio, updated_at';
 
 const AVATAR_BUCKET = 'avatars';
 const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
@@ -44,9 +67,7 @@ export class ProfileService {
   async getMyProfile(): Promise<Profile | null> {
     const { data, error } = await this.supabase.client
       .from('profiles')
-      .select(
-        'user_id, display_name, avatar_url, current_level_id, current_lesson_id, current_item_index, total_xp, streak_count, last_activity_date, role',
-      )
+      .select(PROFILE_COLUMNS)
       .maybeSingle();
 
     if (error) throw error;
@@ -68,6 +89,36 @@ export class ProfileService {
 
     if (error) throw error;
     this.myProfile.update((p) => (p ? { ...p, displayName } : p));
+  }
+
+  async updateProfileDetails(details: ProfileDetailsUpdate): Promise<void> {
+    const {
+      data: { user },
+    } = await this.supabase.client.auth.getUser();
+    if (!user) return;
+
+    const displayName = [details.firstName, details.lastName].filter(Boolean).join(' ').trim() || null;
+
+    const { error } = await this.supabase.client
+      .from('profiles')
+      .update({
+        display_name: displayName,
+        first_name: details.firstName,
+        last_name: details.lastName,
+        phone: details.phone,
+        address: details.address,
+        country: details.country,
+        state_region: details.stateRegion,
+        city: details.city,
+        zip_code: details.zipCode,
+        bio: details.bio,
+      })
+      .eq('user_id', user.id);
+
+    if (error) throw error;
+    this.myProfile.update((p) =>
+      p ? { ...p, displayName, ...details, updatedAt: new Date().toISOString() } : p,
+    );
   }
 
   async uploadAvatar(file: File): Promise<string> {

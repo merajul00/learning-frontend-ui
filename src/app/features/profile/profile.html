@@ -1,131 +1,421 @@
 @if (loading()) {
   <p class="profile__status">Loading profile&hellip;</p>
 } @else {
+  @if (loadError(); as err) {
+    <p class="profile__status profile__error">{{ err }}</p>
+  }
   <div class="profile">
-    <h1 class="profile__title">Profile</h1>
-
-    <section class="profile__card">
-      <h2 class="profile__section-title">Profile Photo</h2>
-      <div class="profile__avatar-row">
-        @if (profile()?.avatarUrl; as avatarUrl) {
-          <img [src]="avatarUrl" alt="Your profile photo" class="profile__avatar-img" />
-        } @else {
-          <span class="profile__avatar-fallback">{{ initials }}</span>
-        }
-
-        <div class="profile__avatar-actions">
-          <label class="profile__avatar-upload" [class.profile__avatar-upload--disabled]="uploadingAvatar()">
-            {{ uploadingAvatar() ? 'Uploading...' : (profile()?.avatarUrl ? 'Change Photo' : 'Set Photo') }}
-            <input
-              type="file"
-              accept="image/png, image/jpeg, image/webp, image/gif"
-              [disabled]="uploadingAvatar()"
-              (change)="onAvatarSelected($event)"
-              hidden
-            />
-          </label>
-          @if (profile()?.avatarUrl) {
-            <button
-              type="button"
-              class="profile__avatar-remove"
-              [disabled]="uploadingAvatar()"
-              (click)="removeAvatar()"
-            >
-              Remove
-            </button>
-          }
+    <section class="profile__header">
+      <div class="profile__header-text">
+        <h1 class="profile__header-title">Account</h1>
+        <div class="profile__breadcrumb">
+          <span class="profile__breadcrumb-item">Dashboard</span>
+          <img src="images/profile/breadcrumb-dot.svg" alt="" class="profile__breadcrumb-dot" />
+          <span class="profile__breadcrumb-item profile__breadcrumb-item--current">Profile Setting</span>
         </div>
       </div>
-      @if (avatarError(); as err) {
-        <span class="profile__error">{{ err }}</span>
-      }
+
+      <button type="button" class="profile__edit-btn" (click)="openEditModal()">
+        <img src="images/profile/edit-icon.svg" alt="" class="profile__edit-btn-icon" />
+        Edit
+      </button>
     </section>
 
     <section class="profile__card">
-      <h2 class="profile__section-title">Learning Info</h2>
-      <dl class="profile__facts">
-        <div>
-          <dt>Email</dt>
-          <dd>{{ authService.user()?.email }}</dd>
-        </div>
-        <div>
-          <dt>Current Level</dt>
-          <dd>
-            @if (currentLevel(); as current) {
-              Level {{ current.level.number }} &mdash; {{ current.level.titleEn }}
+      <div class="profile__avatar-block">
+        <span class="profile__avatar-upload profile__avatar-upload--readonly">
+          <span class="profile__avatar-circle">
+            @if (profile()?.avatarUrl; as avatarUrl) {
+              <img [src]="avatarUrl" alt="Your profile photo" class="profile__avatar-img" />
             } @else {
-              All available levels completed
+              <span class="profile__avatar-fallback">{{ initials }}</span>
             }
-          </dd>
+          </span>
+        </span>
+        <p class="profile__avatar-meta">Last Updated: {{ lastUpdatedLabel }}</p>
+      </div>
+
+      <div class="profile__fields">
+        <div class="profile__row">
+          <label class="profile__field">
+            <input type="text" placeholder=" " [value]="profile()?.firstName ?? ''" disabled />
+            <span class="profile__field-label">First name</span>
+          </label>
+          <label class="profile__field">
+            <input type="text" placeholder=" " [value]="profile()?.lastName ?? ''" disabled />
+            <span class="profile__field-label">Last name</span>
+          </label>
         </div>
-        <div>
-          <dt>Progress</dt>
-          <dd>
-            @if (currentLevel(); as current) {
-              {{ current.itemsCompleted }} / {{ current.totalItems }} items
-            } @else {
-              &mdash;
-            }
-          </dd>
+
+        <div class="profile__row">
+          <label class="profile__field">
+            <input type="email" placeholder=" " [value]="email" disabled />
+            <span class="profile__field-label">Email Address</span>
+          </label>
+          <label class="profile__field profile__field--select">
+            <span class="profile__field-icon">
+              <img src="images/profile/flag-icon.svg" alt="" />
+            </span>
+            <input type="tel" placeholder=" " [value]="profile()?.phone ?? ''" disabled />
+            <span class="profile__field-label">Phone Number</span>
+          </label>
         </div>
-        <div>
-          <dt>Total XP</dt>
-          <dd>{{ profile()?.totalXp ?? 0 }}</dd>
+
+        <label class="profile__field profile__field--full">
+          <input type="text" placeholder=" " [value]="profile()?.address ?? ''" disabled />
+          <span class="profile__field-label">Address</span>
+        </label>
+
+        <div class="profile__row">
+          <label class="profile__field profile__field--select">
+            <span class="profile__field-icon">
+              <img src="images/profile/flag-icon.svg" alt="" />
+            </span>
+            <input type="text" placeholder=" " [value]="profile()?.country ?? ''" disabled />
+            <span class="profile__field-label">Country</span>
+          </label>
+          <label class="profile__field">
+            <input type="text" placeholder=" " [value]="profile()?.stateRegion ?? ''" disabled />
+            <span class="profile__field-label">State/Region</span>
+          </label>
         </div>
-        <div>
-          <dt>Streak</dt>
-          <dd>{{ profile()?.streakCount ?? 0 }} days</dd>
+
+        <div class="profile__row">
+          <label class="profile__field">
+            <input type="text" placeholder=" " [value]="profile()?.city ?? ''" disabled />
+            <span class="profile__field-label">City</span>
+          </label>
+          <label class="profile__field">
+            <input type="text" placeholder=" " [value]="profile()?.zipCode ?? ''" disabled />
+            <span class="profile__field-label">Zip code</span>
+          </label>
         </div>
-        <div>
-          <dt>Lessons Completed</dt>
-          <dd>{{ lessonsCompleted() }}</dd>
-        </div>
-      </dl>
+
+        <label class="profile__field profile__field--full profile__field--textarea">
+          <textarea rows="3" placeholder=" " disabled>{{ profile()?.bio ?? '' }}</textarea>
+          <span class="profile__field-label">About</span>
+        </label>
+      </div>
     </section>
 
-    <section class="profile__card">
-      <h2 class="profile__section-title">Display Name</h2>
-      <form class="profile__form" (ngSubmit)="saveDisplayName()">
-        <label for="displayName">Display name</label>
-        <input
-          id="displayName"
-          type="text"
-          name="displayName"
-          [(ngModel)]="displayNameInput"
-          maxlength="60"
-        />
-        <button type="submit" [disabled]="savingName()">
-          {{ savingName() ? 'Saving...' : 'Save' }}
-        </button>
-        @if (nameSaved()) {
-          <span class="profile__saved">Saved</span>
-        }
+    <section class="profile__card profile__password-card">
+      <h2 class="profile__password-title">Change Password</h2>
+      <form class="profile__password-form" (ngSubmit)="savePassword()">
+        <label class="profile__field profile__field--full">
+          <input
+            type="password"
+            name="newPassword"
+            placeholder=" "
+            autocomplete="new-password"
+            [ngModel]="newPassword()"
+            (ngModelChange)="newPassword.set($event)"
+          />
+          <span class="profile__field-label">New password</span>
+        </label>
+        <div class="profile__password-actions">
+          <button type="submit" class="profile__save-btn" [disabled]="savingPassword()">
+            {{ savingPassword() ? 'Saving...' : 'Update Password' }}
+          </button>
+          @if (passwordSaved()) {
+            <span class="profile__saved">Password updated</span>
+          }
+          @if (passwordError(); as err) {
+            <span class="profile__error">{{ err }}</span>
+          }
+        </div>
       </form>
     </section>
-
-    <section class="profile__card">
-      <h2 class="profile__section-title">Change Password</h2>
-      <form class="profile__form" (ngSubmit)="savePassword()">
-        <label for="newPassword">New password</label>
-        <input
-          id="newPassword"
-          type="password"
-          name="newPassword"
-          [(ngModel)]="newPassword"
-          autocomplete="new-password"
-        />
-        <button type="submit" [disabled]="savingPassword()">
-          {{ savingPassword() ? 'Saving...' : 'Update Password' }}
-        </button>
-        @if (passwordSaved()) {
-          <span class="profile__saved">Password updated</span>
-        }
-        @if (passwordError(); as err) {
-          <span class="profile__error">{{ err }}</span>
-        }
-      </form>
-    </section>
-
-    <a routerLink="/levels" class="profile__back">&larr; Back to Levels</a>
   </div>
+
+  @if (showEditModal()) {
+    <div class="profile-modal-backdrop" (click)="closeEditModal()">
+      <div class="profile-modal" (click)="$event.stopPropagation()">
+        <header class="profile-modal__header">
+          <h2 class="profile-modal__title">Profile Edit</h2>
+        </header>
+
+        <div class="profile-modal__body">
+        <div class="profile-modal__section profile-modal__avatar-card">
+          <div class="profile-modal__avatar-col">
+            <label
+              class="profile-modal__avatar-upload"
+              [class.profile-modal__avatar-upload--busy]="uploadingAvatar()"
+            >
+              <span class="profile-modal__avatar-circle">
+                @if (profile()?.avatarUrl; as avatarUrl) {
+                  <img [src]="avatarUrl" alt="Your profile photo" class="profile-modal__avatar-img" />
+                } @else {
+                  <span class="profile-modal__avatar-fallback">{{ initials }}</span>
+                }
+                <span
+                  class="profile-modal__avatar-overlay"
+                  [class.profile-modal__avatar-overlay--hover-only]="profile()?.avatarUrl"
+                >
+                  <img src="images/profile/add-photo-icon.svg" alt="" class="profile-modal__avatar-overlay-icon" />
+                  <span class="profile-modal__avatar-overlay-text">Update photo</span>
+                </span>
+              </span>
+              <input
+                type="file"
+                accept="image/png, image/jpeg, image/webp, image/gif"
+                [disabled]="uploadingAvatar()"
+                (change)="onAvatarSelected($event)"
+                hidden
+              />
+            </label>
+            <p class="profile-modal__avatar-meta">
+              Allowed *.jpeg, *.jpg, *.png, *.gif<br />
+              Max size of 3.1 MB
+            </p>
+            @if (profile()?.avatarUrl) {
+              <button
+                type="button"
+                class="profile__avatar-remove"
+                [disabled]="uploadingAvatar()"
+                (click)="removeAvatar()"
+              >
+                Remove photo
+              </button>
+            }
+            @if (avatarError(); as err) {
+              <span class="profile__error">{{ err }}</span>
+            }
+          </div>
+        </div>
+
+        <div class="profile-modal__section profile-modal__form-card">
+          <form class="profile__fields" (ngSubmit)="saveDetails()">
+            <div class="profile__row">
+              <label class="profile__field">
+                <input
+                  type="text"
+                  name="firstName"
+                  placeholder=" "
+                  maxlength="60"
+                  [ngModel]="firstName()"
+                  (ngModelChange)="firstName.set($event)"
+                />
+                <span class="profile__field-label">First name</span>
+              </label>
+              <label class="profile__field">
+                <input
+                  type="text"
+                  name="lastName"
+                  placeholder=" "
+                  maxlength="60"
+                  [ngModel]="lastName()"
+                  (ngModelChange)="lastName.set($event)"
+                />
+                <span class="profile__field-label">Last name</span>
+              </label>
+            </div>
+
+            <div class="profile__row">
+              <label class="profile__field">
+                <input type="email" placeholder=" " [value]="email" disabled />
+                <span class="profile__field-label">Email Address</span>
+              </label>
+              <div class="profile__field profile__field--phone">
+                <button
+                  type="button"
+                  class="profile__field-code-select"
+                  (click)="togglePhoneCountryDropdown()"
+                >
+                  <img [src]="flagUrl(phoneCountry().iso2)" alt="" class="profile__field-flag" />
+                  <span class="profile__field-dial-code">{{ phoneCountry().dialCode }}</span>
+                  <img src="images/profile/expand-more-icon.svg" alt="" class="profile__field-chevron" />
+                </button>
+                <input
+                  type="tel"
+                  inputmode="numeric"
+                  name="phone"
+                  placeholder=" "
+                  [ngModel]="phoneNumber()"
+                  (ngModelChange)="onPhoneNumberChange($event)"
+                  (keydown)="onPhoneNumberKeydown($event)"
+                />
+                <span class="profile__field-label">Phone Number</span>
+
+                @if (showPhoneCountryDropdown()) {
+                  <div class="profile__country-dropdown-backdrop" (click)="showPhoneCountryDropdown.set(false)"></div>
+                  <div class="profile__country-dropdown" (click)="$event.stopPropagation()">
+                    <input
+                      type="text"
+                      class="profile__country-search"
+                      placeholder="Search country or code"
+                      name="phoneCountryFilter"
+                      [ngModel]="phoneCountryFilter()"
+                      (ngModelChange)="phoneCountryFilter.set($event)"
+                      (keydown.enter)="$event.preventDefault()"
+                    />
+                    <ul class="profile__country-list">
+                      @for (c of filteredPhoneCountries(); track c.iso2) {
+                        <li>
+                          <button
+                            type="button"
+                            class="profile__country-option"
+                            [class.profile__country-option--active]="c.iso2 === phoneCountry().iso2"
+                            (click)="selectPhoneCountry(c)"
+                          >
+                            <img [src]="flagUrl(c.iso2)" alt="" class="profile__field-flag" />
+                            <span class="profile__country-name">{{ c.name }}</span>
+                            <span class="profile__country-code">{{ c.dialCode }}</span>
+                          </button>
+                        </li>
+                      } @empty {
+                        <li class="profile__country-empty">No matches</li>
+                      }
+                    </ul>
+                  </div>
+                }
+              </div>
+            </div>
+
+            @if (phoneNumberError(); as err) {
+              <span class="profile__error">{{ err }}</span>
+            }
+
+            <label class="profile__field profile__field--full">
+              <input
+                type="text"
+                name="address"
+                placeholder=" "
+                maxlength="120"
+                [ngModel]="address()"
+                (ngModelChange)="address.set($event)"
+              />
+              <span class="profile__field-label">Address</span>
+            </label>
+
+            <div class="profile__row">
+              <div class="profile__field profile__field--select profile__field--country">
+                <button type="button" class="profile__field-select-trigger" (click)="toggleCountryFieldDropdown()">
+                  <span class="profile__field-icon">
+                    @if (countrySelection(); as selected) {
+                      <img [src]="flagUrl(selected.iso2)" alt="" class="profile__field-flag" />
+                    } @else {
+                      <img src="images/profile/flag-icon.svg" alt="" />
+                    }
+                  </span>
+                  <span class="profile__field-select-value" [class.profile__field-select-value--empty]="!countrySelection()">
+                    {{ countrySelection()?.name || ' ' }}
+                  </span>
+                </button>
+                <span
+                  class="profile__field-label"
+                  [class.profile__field-label--raised]="countrySelection() || showCountryFieldDropdown()"
+                  >Country</span
+                >
+                <img src="images/profile/expand-more-icon.svg" alt="" class="profile__field-chevron" />
+
+                @if (showCountryFieldDropdown()) {
+                  <div class="profile__country-dropdown-backdrop" (click)="showCountryFieldDropdown.set(false)"></div>
+                  <div class="profile__country-dropdown" (click)="$event.stopPropagation()">
+                    <input
+                      type="text"
+                      class="profile__country-search"
+                      placeholder="Search country"
+                      name="countryFieldFilter"
+                      [ngModel]="countryFieldFilter()"
+                      (ngModelChange)="countryFieldFilter.set($event)"
+                      (keydown.enter)="$event.preventDefault()"
+                    />
+                    <ul class="profile__country-list">
+                      @for (c of filteredCountryFieldOptions(); track c.iso2) {
+                        <li>
+                          <button
+                            type="button"
+                            class="profile__country-option"
+                            [class.profile__country-option--active]="c.iso2 === countrySelection()?.iso2"
+                            (click)="selectCountryField(c)"
+                          >
+                            <img [src]="flagUrl(c.iso2)" alt="" class="profile__field-flag" />
+                            <span class="profile__country-name">{{ c.name }}</span>
+                          </button>
+                        </li>
+                      } @empty {
+                        <li class="profile__country-empty">No matches</li>
+                      }
+                    </ul>
+                  </div>
+                }
+              </div>
+              <label class="profile__field">
+                <input
+                  type="text"
+                  name="stateRegion"
+                  placeholder=" "
+                  maxlength="60"
+                  [ngModel]="stateRegion()"
+                  (ngModelChange)="stateRegion.set($event)"
+                />
+                <span class="profile__field-label">State/Region</span>
+              </label>
+            </div>
+
+            <div class="profile__row">
+              <label class="profile__field">
+                <input
+                  type="text"
+                  name="city"
+                  placeholder=" "
+                  maxlength="60"
+                  [ngModel]="city()"
+                  (ngModelChange)="city.set($event)"
+                />
+                <span class="profile__field-label">City</span>
+              </label>
+              <label class="profile__field">
+                <input
+                  type="text"
+                  inputmode="numeric"
+                  name="zipCode"
+                  placeholder=" "
+                  maxlength="20"
+                  [ngModel]="zipCode()"
+                  (ngModelChange)="onZipCodeChange($event)"
+                  (keydown)="onZipCodeKeydown($event)"
+                />
+                <span class="profile__field-label">Zip code</span>
+              </label>
+            </div>
+
+            <label class="profile__field profile__field--full profile__field--textarea">
+              <textarea
+                name="bio"
+                rows="3"
+                maxlength="500"
+                placeholder=" "
+                [ngModel]="bio()"
+                (ngModelChange)="bio.set($event)"
+              ></textarea>
+              <span class="profile__field-label">About</span>
+            </label>
+          </form>
+
+          @if (detailsError(); as err) {
+            <span class="profile__error">{{ err }}</span>
+          }
+        </div>
+        </div>
+
+        <div class="profile-modal__divider"></div>
+
+        <footer class="profile-modal__footer">
+          <button type="button" class="profile-modal__cancel-btn" [disabled]="savingDetails()" (click)="closeEditModal()">
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="profile-modal__save-btn"
+            [disabled]="savingDetails() || !isDetailsDirty()"
+            (click)="saveDetails()"
+          >
+            <img src="images/profile/save-icon.svg" alt="" class="profile-modal__save-btn-icon" />
+            {{ savingDetails() ? 'Saving...' : 'Save Changes' }}
+          </button>
+        </footer>
+      </div>
+    </div>
+  }
 }
