@@ -8,11 +8,11 @@
     <section class="profile__header">
       <div class="profile__header-text">
         <h1 class="profile__header-title">Account</h1>
-        <div class="profile__breadcrumb">
-          <span class="profile__breadcrumb-item">Dashboard</span>
+        <nav class="profile__breadcrumb" aria-label="Breadcrumb">
+          <a routerLink="/dashboard" class="profile__breadcrumb-item profile__breadcrumb-link">Dashboard</a>
           <img src="images/profile/breadcrumb-dot.svg" alt="" class="profile__breadcrumb-dot" />
-          <span class="profile__breadcrumb-item profile__breadcrumb-item--current">Profile Setting</span>
-        </div>
+          <span class="profile__breadcrumb-item profile__breadcrumb-item--current" aria-current="page">Profile Setting</span>
+        </nav>
       </div>
 
       <button type="button" class="profile__edit-btn" (click)="openEditModal()">
@@ -54,7 +54,11 @@
           </label>
           <label class="profile__field profile__field--select">
             <span class="profile__field-icon">
-              <img src="images/profile/flag-icon.svg" alt="" />
+              @if (savedPhoneCountry(); as c) {
+                <img [src]="flagUrl(c.iso2)" [alt]="c.name" class="profile__field-flag" />
+              } @else {
+                <img src="images/profile/flag-icon.svg" alt="" />
+              }
             </span>
             <input type="tel" placeholder=" " [value]="profile()?.phone ?? ''" disabled />
             <span class="profile__field-label">Phone Number</span>
@@ -69,7 +73,11 @@
         <div class="profile__row">
           <label class="profile__field profile__field--select">
             <span class="profile__field-icon">
-              <img src="images/profile/flag-icon.svg" alt="" />
+              @if (savedCountry(); as c) {
+                <img [src]="flagUrl(c.iso2)" [alt]="c.name" class="profile__field-flag" />
+              } @else {
+                <img src="images/profile/flag-icon.svg" alt="" />
+              }
             </span>
             <input type="text" placeholder=" " [value]="profile()?.country ?? ''" disabled />
             <span class="profile__field-label">Country</span>
@@ -96,34 +104,6 @@
           <span class="profile__field-label">About</span>
         </label>
       </div>
-    </section>
-
-    <section class="profile__card profile__password-card">
-      <h2 class="profile__password-title">Change Password</h2>
-      <form class="profile__password-form" (ngSubmit)="savePassword()">
-        <label class="profile__field profile__field--full">
-          <input
-            type="password"
-            name="newPassword"
-            placeholder=" "
-            autocomplete="new-password"
-            [ngModel]="newPassword()"
-            (ngModelChange)="newPassword.set($event)"
-          />
-          <span class="profile__field-label">New password</span>
-        </label>
-        <div class="profile__password-actions">
-          <button type="submit" class="profile__save-btn" [disabled]="savingPassword()">
-            {{ savingPassword() ? 'Saving...' : 'Update Password' }}
-          </button>
-          @if (passwordSaved()) {
-            <span class="profile__saved">Password updated</span>
-          }
-          @if (passwordError(); as err) {
-            <span class="profile__error">{{ err }}</span>
-          }
-        </div>
-      </form>
     </section>
   </div>
 

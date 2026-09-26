@@ -1,0 +1,246 @@
+<div class="settings">
+  <section class="settings__header">
+    <h1 class="settings__header-title">Setting</h1>
+    <nav class="settings__breadcrumb" aria-label="Breadcrumb">
+      <span class="settings__breadcrumb-item" aria-current="page">Setting</span>
+    </nav>
+  </section>
+
+  <section class="settings__card">
+    <div class="settings__row">
+      <h2 class="settings__row-title">Change Password</h2>
+      <div class="settings__row-actions">
+        @if (passwordSaved()) {
+          <span class="settings__saved" role="status">Password updated</span>
+        }
+        <button type="button" class="settings__btn settings__btn--outline" (click)="openPasswordModal()">
+          <img src="images/settings/key-icon.svg" alt="" class="settings__btn-icon" />
+          Update Password
+        </button>
+      </div>
+    </div>
+
+    <div class="settings__row">
+      <h2 class="settings__row-title">Delete Account</h2>
+      <button type="button" class="settings__btn settings__btn--danger" (click)="openDeleteModal()">
+        <img src="images/settings/trash-icon.svg" alt="" class="settings__btn-icon" />
+        Permanently Delete
+      </button>
+    </div>
+  </section>
+</div>
+
+@if (showPasswordModal()) {
+  <div class="settings-modal-backdrop" (click)="closePasswordModal()">
+    <form
+      class="settings-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="password-modal-title"
+      (click)="$event.stopPropagation()"
+      (ngSubmit)="savePassword()"
+    >
+      <header class="settings-modal__header">
+        <h2 id="password-modal-title" class="settings-modal__title">Change Password</h2>
+      </header>
+
+      <div class="settings-modal__illustration">
+        <img src="images/settings/lock-illustration.svg" alt="" />
+      </div>
+
+      <div class="settings-modal__form-card">
+        <div class="settings__field-group">
+          <label class="settings__field settings__field--password">
+            <input
+              [type]="showOldPassword() ? 'text' : 'password'"
+              name="oldPassword"
+              placeholder=" "
+              autocomplete="current-password"
+              [attr.aria-describedby]="requiresOldPassword() ? null : 'old-password-helper'"
+              [disabled]="!requiresOldPassword()"
+              [ngModel]="oldPassword()"
+              (ngModelChange)="oldPassword.set($event)"
+            />
+            <span class="settings__field-label">Old Password</span>
+            <button
+              type="button"
+              class="settings__field-toggle"
+              [attr.aria-label]="showOldPassword() ? 'Hide old password' : 'Show old password'"
+              [attr.aria-pressed]="showOldPassword()"
+              [disabled]="!requiresOldPassword()"
+              (click)="showOldPassword.set(!showOldPassword())"
+            >
+              <img [src]="showOldPassword() ? 'images/settings/eye-icon.svg' : 'images/settings/eye-closed-icon.svg'" alt="" />
+            </button>
+          </label>
+          @if (!requiresOldPassword()) {
+            <p id="old-password-helper" class="settings__helper">
+              <img src="images/settings/info-icon.svg" alt="" class="settings__helper-icon" />
+              You signed in with Google, so there's no old password. Just set a new one.
+            </p>
+          }
+        </div>
+
+        <div class="settings__field-group">
+          <label class="settings__field settings__field--password">
+            <input
+              [type]="showNewPassword() ? 'text' : 'password'"
+              name="newPassword"
+              placeholder=" "
+              autocomplete="new-password"
+              aria-describedby="new-password-helper"
+              [ngModel]="newPassword()"
+              (ngModelChange)="newPassword.set($event)"
+            />
+            <span class="settings__field-label">New Password</span>
+            <button
+              type="button"
+              class="settings__field-toggle"
+              [attr.aria-label]="showNewPassword() ? 'Hide new password' : 'Show new password'"
+              [attr.aria-pressed]="showNewPassword()"
+              (click)="showNewPassword.set(!showNewPassword())"
+            >
+              <img [src]="showNewPassword() ? 'images/settings/eye-icon.svg' : 'images/settings/eye-closed-icon.svg'" alt="" />
+            </button>
+          </label>
+          <p id="new-password-helper" class="settings__helper">
+            <img src="images/settings/info-icon.svg" alt="" class="settings__helper-icon" />
+            Password must be minimum {{ minPasswordLength }}+
+          </p>
+        </div>
+
+        <label class="settings__field settings__field--password">
+          <input
+            [type]="showConfirmPassword() ? 'text' : 'password'"
+            name="confirmPassword"
+            placeholder=" "
+            autocomplete="new-password"
+            [ngModel]="confirmPassword()"
+            (ngModelChange)="confirmPassword.set($event)"
+          />
+          <span class="settings__field-label">Confirm New Password</span>
+          <button
+            type="button"
+            class="settings__field-toggle"
+            [attr.aria-label]="showConfirmPassword() ? 'Hide confirm password' : 'Show confirm password'"
+            [attr.aria-pressed]="showConfirmPassword()"
+            (click)="showConfirmPassword.set(!showConfirmPassword())"
+          >
+            <img [src]="showConfirmPassword() ? 'images/settings/eye-icon.svg' : 'images/settings/eye-closed-icon.svg'" alt="" />
+          </button>
+        </label>
+
+        @if (passwordError(); as err) {
+          <p class="settings-modal__error" role="alert">{{ err }}</p>
+        }
+      </div>
+
+      <div class="settings-modal__divider"></div>
+
+      <footer class="settings-modal__footer">
+        <button
+          type="button"
+          class="settings__btn settings__btn--outline settings__btn--compact"
+          [disabled]="savingPassword()"
+          (click)="closePasswordModal()"
+        >
+          Cancel
+        </button>
+        <button type="submit" class="settings__btn settings__btn--danger settings__btn--compact" [disabled]="savingPassword()">
+          <img src="images/settings/save-icon.svg" alt="" class="settings__btn-icon" />
+          {{ savingPassword() ? 'Saving...' : 'Save Changes' }}
+        </button>
+      </footer>
+    </form>
+  </div>
+}
+
+@if (showDeleteModal()) {
+  <div class="settings-modal-backdrop" (click)="closeDeleteModal()">
+    <form
+      class="settings-modal"
+      role="alertdialog"
+      aria-modal="true"
+      aria-labelledby="delete-modal-title"
+      aria-describedby="delete-modal-question delete-modal-text"
+      (click)="$event.stopPropagation()"
+      (ngSubmit)="deleteAccount()"
+    >
+      <header class="settings-modal__header">
+        <h2 id="delete-modal-title" class="settings-modal__title">Delete Account</h2>
+      </header>
+
+      <div class="settings-modal__form-card settings-modal__form-card--delete">
+        <div class="settings-modal__warning">
+          <div class="settings-modal__warning-art">
+            <div class="settings-modal__warning-group">
+              <img src="images/settings/warning-illustration.svg" alt="" />
+            </div>
+          </div>
+          <div class="settings-modal__warning-copy">
+            <p id="delete-modal-question" class="settings-modal__warning-title">
+              Are you sure you want to delete your account?
+            </p>
+            <p id="delete-modal-text" class="settings-modal__warning-text">
+              This will permanently delete your profile, learning progress, and saved data. This action can’t be
+              undone.
+            </p>
+          </div>
+        </div>
+
+        <div class="settings-modal__confirm">
+          <label class="settings__field settings__field--password">
+            <input
+              [type]="showDeletePassword() ? 'text' : 'password'"
+              name="deletePassword"
+              placeholder=" "
+              autocomplete="current-password"
+              [attr.aria-describedby]="needsPasswordToDelete() ? 'delete-password-helper' : null"
+              [disabled]="needsPasswordToDelete()"
+              [ngModel]="deleteConfirmText()"
+              (ngModelChange)="deleteConfirmText.set($event)"
+            />
+            <span class="settings__field-label">Enter your password to confirm</span>
+            <button
+              type="button"
+              class="settings__field-toggle"
+              [attr.aria-label]="showDeletePassword() ? 'Hide password' : 'Show password'"
+              [attr.aria-pressed]="showDeletePassword()"
+              [disabled]="needsPasswordToDelete()"
+              (click)="showDeletePassword.set(!showDeletePassword())"
+            >
+              <img [src]="showDeletePassword() ? 'images/settings/eye-closed-icon.svg' : 'images/settings/eye-icon.svg'" alt="" />
+            </button>
+          </label>
+          @if (needsPasswordToDelete()) {
+            <p id="delete-password-helper" class="settings__helper">
+              <img src="images/settings/info-icon.svg" alt="" class="settings__helper-icon" />
+              You signed in with Google, so set a password first.
+              <button type="button" class="settings__helper-link" (click)="openPasswordModal()">Set a password</button>
+            </p>
+          }
+          @if (deleteError(); as err) {
+            <p class="settings-modal__error settings-modal__confirm-error" role="alert">{{ err }}</p>
+          }
+        </div>
+      </div>
+
+      <div class="settings-modal__divider"></div>
+
+      <footer class="settings-modal__footer">
+        <button
+          type="button"
+          class="settings__btn settings__btn--outline settings__btn--compact"
+          [disabled]="deletingAccount()"
+          (click)="closeDeleteModal()"
+        >
+          Cancel
+        </button>
+        <button type="submit" class="settings__btn settings__btn--danger" [disabled]="!canDelete()">
+          <img src="images/settings/trash-icon.svg" alt="" class="settings__btn-icon" />
+          {{ deletingAccount() ? 'Deleting...' : 'Delete Account' }}
+        </button>
+      </footer>
+    </form>
+  </div>
+}

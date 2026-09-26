@@ -49,6 +49,16 @@
   }
 }
 
+.profile__breadcrumb-link {
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+}
+
 .profile__breadcrumb-dot {
   width: 4px;
   height: 4px;
@@ -566,64 +576,6 @@
   text-align: center;
   font-size: 13px;
   color: var(--color-grey-600);
-}
-
-// ---------------------------------------------------------------------------
-// Password card
-// ---------------------------------------------------------------------------
-
-.profile__password-card {
-  align-items: stretch;
-  gap: var(--spacing-md);
-}
-
-.profile__password-title {
-  margin: 0;
-  font-family: var(--font-family-inclusive);
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--color-grey-900);
-}
-
-.profile__password-form {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
-.profile__password-form .profile__field {
-  flex: 1 0 240px;
-}
-
-.profile__password-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.profile__save-btn {
-  padding: 15px 24px;
-  border: none;
-  border-radius: var(--radius-md);
-  background-color: var(--color-accent);
-  box-shadow: 0 8px 8px rgba(209, 28, 32, 0.24);
-  font-family: var(--font-family-cta);
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
-}
-
-.profile__saved {
-  font-size: 13px;
-  color: var(--color-success);
-  font-weight: 600;
 }
 
 .profile__error {

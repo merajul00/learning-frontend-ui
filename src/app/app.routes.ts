@@ -142,8 +142,7 @@ export const routes: Routes = [
       },
       {
         path: 'settings',
-        component: ComingSoon,
-        data: { title: 'Setting', description: 'Settings are coming soon.' },
+        loadComponent: () => import('./features/settings/settings').then((m) => m.Settings),
         title: 'Setting',
       },
       {
