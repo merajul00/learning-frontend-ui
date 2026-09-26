@@ -1,0 +1,68 @@
+<article class="level-overview-card" [class.level-overview-card--locked]="isLocked()">
+  <header class="level-overview-card__header">
+    <div class="level-overview-card__heading">
+      <span class="level-overview-card__badge" aria-hidden="true">
+        <img src="images/levels/level-badge.svg" alt="" class="level-overview-card__badge-shape" />
+        <span class="level-overview-card__badge-number">{{ badgeNumber() }}</span>
+      </span>
+      <h3 class="level-overview-card__title">
+        @if (isLocked()) {
+          {{ title() }}
+        } @else {
+          <a [routerLink]="['/levels', levelId()]" class="level-overview-card__title-link">{{ title() }}</a>
+        }
+      </h3>
+    </div>
+    <span class="level-overview-card__status" [class]="'level-overview-card__status level-overview-card__status--' + state()">
+      {{ statusLabel() }}
+    </span>
+  </header>
+
+  @if (lessons().length) {
+    <ul class="level-overview-card__lessons" [attr.aria-label]="title() + ' lessons'">
+      @for (lesson of lessons(); track lesson.id) {
+        <li class="level-overview-card__lesson" [class.level-overview-card__lesson--done]="lesson.completed">
+          <span class="level-overview-card__lesson-radio" aria-hidden="true">
+            <img [src]="lesson.completed ? 'images/levels/lesson-check-icon.svg' : 'images/levels/lesson-unchecked-icon.svg'" alt="" />
+          </span>
+          <span class="level-overview-card__lesson-title" [title]="lesson.title">{{ lesson.title }}</span>
+          <span class="visually-hidden">{{ lesson.completed ? '(completed)' : '(not completed)' }}</span>
+        </li>
+      }
+    </ul>
+  }
+
+  <div
+    class="level-overview-card__progress"
+    role="progressbar"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    [attr.aria-valuenow]="progressPercent()"
+    [attr.aria-label]="title() + ' progress'"
+  >
+    <div class="level-overview-card__progress-track">
+      <div class="level-overview-card__progress-fill" [style.width.%]="progressPercent()"></div>
+    </div>
+    <span class="level-overview-card__progress-value">{{ progressPercent() }}%</span>
+  </div>
+
+  <div class="level-overview-card__actions">
+    @if (isLocked()) {
+      <button
+        type="button"
+        class="level-overview-card__btn level-overview-card__btn--locked"
+        disabled
+        title="Finish the previous card's levels to unlock this one"
+      >
+        Unlock
+      </button>
+    } @else {
+      <a [routerLink]="['/levels', levelId(), 'practice']" class="level-overview-card__btn level-overview-card__btn--outline">
+        Practice
+      </a>
+      <a [routerLink]="['/levels', levelId(), 'exam']" class="level-overview-card__btn level-overview-card__btn--danger">
+        Exam
+      </a>
+    }
+  </div>
+</article>

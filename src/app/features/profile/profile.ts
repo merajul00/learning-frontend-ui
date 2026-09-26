@@ -1,5 +1,6 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { Profile } from '../../core/models/user-progress.model';
 import { AuthService } from '../../core/services/auth.service';
 import { ProfileService } from '../../core/services/profile.service';
@@ -24,7 +25,7 @@ function extractErrorMessage(error: unknown, fallback: string): string {
 }
 
 @Component({
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   selector: 'app-profile',
   styleUrl: './profile.scss',
   templateUrl: './profile.html',
@@ -55,11 +56,6 @@ export class ProfilePage implements OnInit {
   zipCode = signal('');
   bio = signal('');
 
-  newPassword = signal('');
-  savingPassword = signal(false);
-  passwordSaved = signal(false);
-  passwordError = signal<string | null>(null);
-
   uploadingAvatar = signal(false);
   avatarError = signal<string | null>(null);
 
@@ -73,6 +69,12 @@ export class ProfilePage implements OnInit {
   get email(): string {
     return this.authService.user()?.email ?? '';
   }
+
+  /** Countries of the saved profile, for the read-only view (the form signals only change while editing). */
+  readonly savedPhoneCountry = computed(() =>
+    this.profile()?.phone ? parseStoredPhone(this.profile()?.phone).country : null,
+  );
+  readonly savedCountry = computed(() => findCountryByName(this.profile()?.country));
 
   readonly filteredPhoneCountries = computed(() => {
     const query = this.phoneCountryFilter().trim().toLowerCase();
@@ -300,27 +302,6 @@ export class ProfilePage implements OnInit {
       this.avatarError.set(extractErrorMessage(error, 'Could not remove photo.'));
     } finally {
       this.uploadingAvatar.set(false);
-    }
-  }
-
-  async savePassword(): Promise<void> {
-    const password = this.newPassword();
-    if (password.length < 6) {
-      this.passwordError.set('Password must be at least 6 characters.');
-      return;
-    }
-
-    this.savingPassword.set(true);
-    this.passwordError.set(null);
-    this.passwordSaved.set(false);
-    try {
-      await this.authService.updatePassword(password);
-      this.newPassword.set('');
-      this.passwordSaved.set(true);
-    } catch {
-      this.passwordError.set('Could not update your password. Please try again.');
-    } finally {
-      this.savingPassword.set(false);
     }
   }
 }

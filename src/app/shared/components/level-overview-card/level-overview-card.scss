@@ -1,0 +1,293 @@
+// Figma 292:4090 (393 x 270). Absolute offsets in the design (12 / 58 / 192 / 222)
+// become a padded column: header 40px + 6px, lessons, 14px, progress, 12px, actions.
+
+:host {
+  display: block;
+}
+
+.level-overview-card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 393px;
+  // Fixed 270px in Figma (293:4744 has fewer lessons but the same height);
+  // grows only if a level has more than six lessons.
+  min-height: 270px;
+  padding: 12px;
+  border-radius: 16px;
+  background-color: #fff;
+  filter: drop-shadow(0 0 1px rgba(145, 158, 171, 0.2)) drop-shadow(0 12px 12px rgba(145, 158, 171, 0.12));
+}
+
+// ---------------------------------------------------------------------------
+// Header: badge + title, status label
+// ---------------------------------------------------------------------------
+
+.level-overview-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 40px;
+  margin-bottom: 6px;
+}
+
+.level-overview-card__heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+// 40px badge with the 36px shield at 2px, number centred on top.
+.level-overview-card__badge {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+}
+
+.level-overview-card__badge-shape {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  display: block;
+}
+
+.level-overview-card__badge-number {
+  position: relative;
+  width: 28px;
+  font-family: var(--font-family-geist-mono);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: normal;
+  color: #fff;
+  text-align: center;
+  // Centre on the cap height like Figma's trimmed text box.
+  text-box: trim-both cap alphabetic;
+}
+
+.level-overview-card__title {
+  overflow: hidden;
+  margin: 0;
+  font-family: var(--font-family-inclusive);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: normal;
+  color: var(--color-grey-900);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.level-overview-card__title-link {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.level-overview-card__status {
+  flex-shrink: 0;
+  padding: 1px 8px;
+  border-radius: 6px;
+  font-family: var(--font-family-inclusive);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+  white-space: nowrap;
+
+  &--completed {
+    background-color: rgba(84, 214, 44, 0.16);
+    color: #229a16;
+  }
+
+  &--in_progress {
+    background-color: rgba(255, 193, 7, 0.16);
+    color: #b78103;
+  }
+
+  // Not in Figma: unlocked but not started yet, styled like In Progress.
+  &--available {
+    background-color: rgba(255, 193, 7, 0.16);
+    color: #b78103;
+  }
+
+  &--locked {
+    background-color: rgba(24, 144, 255, 0.16);
+    color: #0c53b7;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Lesson checklist: two columns (1fr / 2fr), 54px apart
+// ---------------------------------------------------------------------------
+
+.level-overview-card__lessons {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  column-gap: 54px;
+  margin: 0;
+  padding: 0 0 14px;
+  // Keep rows 40px even when a name is long.
+  grid-auto-rows: 40px;
+  list-style: none;
+}
+
+.level-overview-card__lesson {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+
+  // Left-column names may run across the 54px gap up to the second column, as in Figma.
+  &:nth-child(odd) {
+    margin-right: -54px;
+  }
+}
+
+.level-overview-card__lesson-radio {
+  position: relative;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50px;
+
+  img {
+    position: absolute;
+    inset: 20%;
+    display: block;
+  }
+}
+
+.level-overview-card__lesson-title {
+  // Inclusive Sans has no Bengali glyphs, so lesson names fall back to Noto Sans Bengali.
+  font-family: 'Inclusive Sans', 'Noto Sans Bengali', var(--font-family-base);
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--color-grey-900);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ---------------------------------------------------------------------------
+// Progress
+// ---------------------------------------------------------------------------
+
+.level-overview-card__progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  // Pinned to the bottom, 12px above the actions.
+  margin: auto 0 12px 7px;
+}
+
+.level-overview-card__progress-track {
+  position: relative;
+  flex: 1 0 0;
+  min-width: 1px;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background-color: #c8facd;
+}
+
+.level-overview-card__progress-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 2px;
+  background-color: #00ab55;
+  transition: width 0.3s ease;
+}
+
+.level-overview-card__progress-value {
+  flex-shrink: 0;
+  font-family: var(--font-family-public);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--color-grey-600);
+  white-space: nowrap;
+}
+
+// ---------------------------------------------------------------------------
+// Actions
+// ---------------------------------------------------------------------------
+
+.level-overview-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.level-overview-card__btn {
+  box-sizing: border-box;
+  display: flex;
+  flex: 1 0 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 1px;
+  padding: 6px 16px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-family-cta);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 24px;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &--outline {
+    // Figma's inside stroke: 16px padding + 1px border, so it ends up 2px wider than Exam.
+    padding: 5px 16px;
+    border: 1px solid rgba(145, 158, 171, 0.32);
+    color: var(--color-grey-900);
+
+    &:hover:not(.level-overview-card__btn--disabled) {
+      background-color: rgba(145, 158, 171, 0.08);
+    }
+  }
+
+  &--danger {
+    background-color: var(--color-accent);
+    filter: drop-shadow(0 8px 8px rgba(209, 28, 32, 0.24));
+    color: #fff;
+
+    &:hover:not(.level-overview-card__btn--disabled) {
+      background-color: #b3171b;
+    }
+  }
+
+  // Locked level (Figma 293:4815): one full-width disabled "Unlock" button.
+  &--locked {
+    padding: 5px 16px;
+    border: 1px solid rgba(145, 158, 171, 0.24);
+    background: none;
+    color: rgba(145, 158, 171, 0.8);
+    cursor: not-allowed;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

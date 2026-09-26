@@ -1,21 +1,78 @@
 <section class="levels">
   <header class="levels__header">
-    <h1 class="levels__title">Learning Levels</h1>
-    <p class="levels__subtitle">Complete each level in order to unlock the next one.</p>
+    <div class="levels__header-text">
+      <h1 class="levels__title">N5 Levels</h1>
+      <nav class="levels__breadcrumb" aria-label="Breadcrumb">
+        <span class="levels__breadcrumb-item">Learning Levels</span>
+        <img src="images/profile/breadcrumb-dot.svg" alt="" class="levels__breadcrumb-dot" />
+        <span class="levels__breadcrumb-item levels__breadcrumb-item--current" aria-current="page">N5 Levels</span>
+      </nav>
+    </div>
+
+    <a routerLink="/help-support" class="levels__bug-btn">
+      <span class="levels__bug-icon">
+        <span class="levels__bug-icon-carrier">
+          <img src="images/levels/bug-icon.svg" alt="" />
+        </span>
+      </span>
+      Post BUG
+    </a>
   </header>
 
-  @if (loading()) {
-    <p class="levels__status">Loading levels&hellip;</p>
-  } @else {
-    <div class="levels__grid">
-      @for (item of levels(); track item.level.id) {
-        <app-level-card
-          [level]="item.level"
-          [state]="item.state"
-          [itemsCompleted]="item.itemsCompleted"
-          [totalItems]="item.totalItems"
-        />
-      }
-    </div>
-  }
+  <div class="levels__tabs" role="tablist" aria-label="Level views">
+    <button
+      type="button"
+      role="tab"
+      id="levels-tab-new"
+      class="levels__tab"
+      aria-controls="levels-panel"
+      [class.levels__tab--active]="activeTab() === 'new'"
+      [attr.aria-selected]="activeTab() === 'new'"
+      (click)="activeTab.set('new')"
+    >
+      New
+    </button>
+    <button
+      type="button"
+      role="tab"
+      id="levels-tab-old"
+      class="levels__tab"
+      aria-controls="levels-panel"
+      [class.levels__tab--active]="activeTab() === 'old'"
+      [attr.aria-selected]="activeTab() === 'old'"
+      (click)="activeTab.set('old')"
+    >
+      Old
+    </button>
+  </div>
+
+  <div id="levels-panel" class="levels__panel" role="tabpanel" [attr.aria-labelledby]="'levels-tab-' + activeTab()">
+    @if (loading()) {
+      <p class="levels__status">Loading levels&hellip;</p>
+    } @else if (activeTab() === 'new') {
+      <div class="levels__grid levels__grid--new">
+        @for (group of levelGroups(); track group.number) {
+          <app-level-overview-card
+            [number]="group.number"
+            [title]="group.title"
+            [state]="group.state"
+            [progress]="group.progress"
+            [lessons]="group.lessons"
+            [levelId]="group.targetLevelId"
+          />
+        }
+      </div>
+    } @else {
+      <div class="levels__grid">
+        @for (item of levels(); track item.level.id) {
+          <app-level-card
+            [level]="item.level"
+            [state]="item.state"
+            [itemsCompleted]="item.itemsCompleted"
+            [totalItems]="item.totalItems"
+          />
+        }
+      </div>
+    }
+  </div>
 </section>
